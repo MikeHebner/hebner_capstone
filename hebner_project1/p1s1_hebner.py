@@ -12,14 +12,13 @@ def getTopTv():
         json.dump(data, file)
 
 
-def getUserRatingData(rank):
-    IMDBid = getID(rank)
-    url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.IMDB_KEY, IMDBid)
+def getUserRatingData(id):
+    url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.IMDB_KEY, id)
     response = requests.get(url)
     data = response.json()
     title = data['title']
     ratings = data['ratings']
-    file = open("userRankings.txt", "a")
+    file = open("dataMain.txt", "a")
     file.write(title + "\n")
     for i in ratings:
         line = "RATING:{} PERCENT:{} VOTES:{}\n".format(i['rating'], i['percent'], i['votes'])
@@ -28,27 +27,32 @@ def getUserRatingData(rank):
     file.close()
 
 
-# Returns imdb id from rank off of top 250 shows
-def getID(rank):
-    # index of each is its rank minus one.
-    # 1 ranked is in 0th index
-    index = rank - 1
-    topTv = open('topTv.json')
-    topTv = json.loads(topTv.read())
-    return topTv['items'][index]['id']
-
-
-def getID(name):
-    url = "https://imdb-api.com/en/API/SearchSeries/{}/{}".format(secrets.IMDB_KEY, name)
-    response = requests.get(url)
-    data = response.json()
-    return data["results"][0]["id"]
+# Returns imdb id from rank off of top 250 shows or by name
+def getID(notID):
+    # get id from ranking
+    if type(notID) is int:
+        rank = notID
+        # index of each is its rank minus one.
+        # 1 ranked is in 0th index
+        index = rank - 1
+        topTv = open('topTv.json')
+        topTv = json.loads(topTv.read())
+        return topTv['items'][index]['id']
+    # get id from (str) name
+    if type(notID) is str:
+        name = notID
+        print(name)
+        url = "https://imdb-api.com/en/API/SearchSeries/{}/{}".format(secrets.IMDB_KEY, name)
+        response = requests.get(url)
+        data = response.json()
+        return data["results"][0]["id"]
 
 
 ranksToGet = [1, 50, 100, 200]
 # I've commented this out b/c it has done its job.
-# for i in ranksToGet:
-#   getUserRatingData(i)
+for i in ranksToGet:
+    IMDBid = getID(i)
+    getUserRatingData(IMDBid)
 
 wot = "Wheel of Time"
 wotID = getID(wot)
