@@ -12,6 +12,20 @@ def getTopTv():
         json.dump(data, file)
 
 
+def putTopTv():
+    file = open("topTv.json")
+    data = json.loads(file.read())
+    file.close()
+    file = open("dataMain.txt", "a")
+    file.write("TOP 250 TV SHOWS:\n")
+    for i in data['items']:
+        rank = i['rank']
+        title = i['title']
+        year = i['year']
+        line = rank + " -- " + title + " (" + year + ") ,\n"
+        file.write(line)
+
+
 def getUserRatingData(id):
     url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.IMDB_KEY, id)
     response = requests.get(url)
@@ -50,10 +64,14 @@ def getID(notID):
 
 ranksToGet = [1, 50, 100, 200]
 # I've commented this out b/c it has done its job.
-for i in ranksToGet:
-    IMDBid = getID(i)
-    getUserRatingData(IMDBid)
+# for i in ranksToGet:
+#     IMDBid = getID(i)
+#     getUserRatingData(IMDBid)
+#
+# wot = "Wheel of Time"
+# wotID = getID(wot)
+# getUserRatingData(wotID)
 
-wot = "Wheel of Time"
-wotID = getID(wot)
-getUserRatingData(wotID)
+
+# This function writes the top 250 shows to the text file.
+# putTopTv()
