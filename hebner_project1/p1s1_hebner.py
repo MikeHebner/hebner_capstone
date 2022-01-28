@@ -17,7 +17,15 @@ def getUserRatingData(rank):
     url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.IMDB_KEY, IMDBid)
     response = requests.get(url)
     data = response.json()
-    print(data)
+    title = data['title']
+    ratings = data['ratings']
+    file = open("userRankings.txt", "a")
+    file.write(title + "\n")
+    for i in ratings:
+        line = "RATING:{} PERCENT:{} VOTES:{}\n".format(i['rating'], i['percent'], i['votes'])
+        file.write(line)
+    file.write("\n")
+    file.close()
 
 
 # Returns imdb id from rank off of top 250 shows
@@ -30,4 +38,18 @@ def getID(rank):
     return topTv['items'][index]['id']
 
 
-getUserRatingData(1)
+def getID(name):
+    url = "https://imdb-api.com/en/API/SearchSeries/{}/{}".format(secrets.IMDB_KEY, name)
+    response = requests.get(url)
+    data = response.json()
+    return data["results"][0]["id"]
+
+
+ranksToGet = [1, 50, 100, 200]
+# I've commented this out b/c it has done its job.
+# for i in ranksToGet:
+#   getUserRatingData(i)
+
+wot = "Wheel of Time"
+wotID = getID(wot)
+getUserRatingData(wotID)
