@@ -55,7 +55,6 @@ def getID(notID):
     # get id from (str) name
     if type(notID) is str:
         name = notID
-        print(name)
         url = "https://imdb-api.com/en/API/SearchSeries/{}/{}".format(secrets.IMDB_KEY, name)
         response = requests.get(url)
         data = response.json()
