@@ -13,5 +13,8 @@
         <li>Formats the Top 250 shows, from the json file in the project directory, into a readable format 
             and writes them in ascending order to the text file in the project directory.</li>
     </ul>
-    <h3>This is what is missing</h3>
+    <h3>Missing or Not Working</h3>
+    <ul>
+        <li>N/A</li>
+    </ul>
 </body>
