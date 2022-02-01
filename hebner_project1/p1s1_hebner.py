@@ -68,7 +68,7 @@ def getID(notID):
 
 
 # Below is where all the work was done.
-# I saved the ranks to get as an array so I could loop the ideas through faster
+# I saved the ranks to get as an array, so I could loop the ideas through faster
 ranksToGet = [1, 50, 100, 200]
 # I've commented this out b/c it has done its job.
 # for i in ranksToGet:
