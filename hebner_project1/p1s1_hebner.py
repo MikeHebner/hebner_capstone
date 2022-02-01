@@ -4,6 +4,8 @@ import requests
 import secrets
 
 
+# Gets the top 250 TV shows and saves the json response to the project directory
+# I did this to cut down on the api request
 def getTopTv():
     url = "https://imdb-api.com/en/API/Top250TVs/{}".format(secrets.IMDB_KEY)
     response = requests.get(url)
@@ -12,6 +14,7 @@ def getTopTv():
         json.dump(data, file)
 
 
+# opens the main text file and appends the list of top 250 shows to it
 def putTopTv():
     file = open("topTv.json")
     data = json.loads(file.read())
@@ -26,6 +29,9 @@ def putTopTv():
         file.write(line)
 
 
+# Function takes one id (IMDB id)
+# Formats the returned rating into a readable format
+# Appends it to the main text file
 def getUserRatingData(id):
     url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.IMDB_KEY, id)
     response = requests.get(url)
@@ -61,6 +67,8 @@ def getID(notID):
         return data["results"][0]["id"]
 
 
+# Below is where all the work was done.
+# I saved the ranks to get as an array so I could loop the ideas through faster
 ranksToGet = [1, 50, 100, 200]
 # I've commented this out b/c it has done its job.
 # for i in ranksToGet:
