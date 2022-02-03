@@ -65,6 +65,8 @@ def getID(notID):
         response = requests.get(url)
         data = response.json()
         return data["results"][0]["id"]
+    else:
+        return "INVALID INPUT"
 
 
 # Below is where all the work was done.
