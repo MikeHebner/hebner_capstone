@@ -2,6 +2,7 @@
 import json
 import requests
 import secrets
+import model
 
 
 # Gets the top 250 TV shows and saves the json response to the project directory
@@ -71,7 +72,7 @@ def getID(notID):
 
 # Below is where all the work was done.
 # I saved the ranks to get as an array, so I could loop the ideas through faster
-ranksToGet = [1, 50, 100, 200]
+# ranksToGet = [1, 50, 100, 200]
 # I've commented this out b/c it has done its job.
 # for i in ranksToGet:
 #     IMDBid = getID(i)
@@ -80,7 +81,28 @@ ranksToGet = [1, 50, 100, 200]
 # wot = "Wheel of Time"
 # wotID = getID(wot)
 # getUserRatingData(wotID)
-
-
+#
+#
 # This function writes the top 250 shows to the text file.
 # putTopTv()
+
+def loadTopTv():
+    file = open("topTv.json")
+    data = json.loads(file.read())
+    file.close()
+    for i in data['items']:
+        id = i['id']
+        rank = i['rank']
+        title = i['title']
+        full_title = i['fullTitle']
+        year = i['year']
+        crew = i['crew']
+        imdb_rating = i['imDbRating']
+        imdb_rating_count = i['imDbRatingCount']
+        model.TopTv.add(id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
+
+#def loadUserRatings():
+
+
+loadTopTv()
+

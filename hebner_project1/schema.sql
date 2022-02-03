@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS TopShows;
 CREATE TABLE TopShows
 (
   id INT NOT NULL,
+  rank INT NOT NULL,
   title VARCHAR NOT NULL,
   full_title VARCHAR NOT NULL,
   year VARCHAR(4) NOT NULL,
