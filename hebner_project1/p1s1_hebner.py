@@ -48,6 +48,30 @@ def getUserRatingData(id):
     file.close()
 
 
+# I will delete above function once grading for sprint 1 is complete.
+# This function is doing the same, just for database instead of txt file.
+def getUserRatingDataV2(id):
+    url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.IMDB_KEY, id)
+    response = requests.get(url)
+    data = response.json()
+    imdbID = data['imDbId']
+    total_rating = data['totalRating']
+    total_rating_votes = data['totalRatingVotes']
+    # Each is a row in rating_i
+    ratingPercents = []
+    # Each is a row in rating_i_votes
+    ratingVotes = []
+    ratings = data['ratings']
+    for i in ratings:
+        percent = i['percent']
+        percent = percent[:-1]
+        votes = i['votes']
+        ratingPercents.append(percent)
+        ratingVotes.append(votes)
+    return imdbID, total_rating, total_rating_votes, ratingPercents, ratingVotes
+
+
+
 # Returns imdb id from rank off of top 250 shows or by name
 def getID(notID):
     # get id from ranking
@@ -101,8 +125,7 @@ def loadTopTv():
         imdb_rating_count = i['imDbRatingCount']
         model.TopTv.add(id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
 
-#def loadUserRatings():
 
+# loadTopTv()
 
-loadTopTv()
-
+print(getUserRatingDataV2("tt1375666"))
