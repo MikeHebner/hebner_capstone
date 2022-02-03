@@ -38,6 +38,5 @@ CREATE TABLE User_Ratings
   rating_2_votes INT NOT NULL,
   rating_1 INT NOT NULL,
   rating_1_votes INT NOT NULL,
-  imbdID INT NOT NULL,
-  FOREIGN KEY (imbdID) REFERENCES TopShows(id)
+  FOREIGN KEY (imdbID) REFERENCES TopShows(id)
 );

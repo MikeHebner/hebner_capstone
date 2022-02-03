@@ -71,7 +71,6 @@ def getUserRatingDataV2(id):
     return imdbID, total_rating, total_rating_votes, ratingPercents, ratingVotes
 
 
-
 # Returns imdb id from rank off of top 250 shows or by name
 def getID(notID):
     # get id from ranking
@@ -125,7 +124,18 @@ def loadTopTv():
         imdb_rating_count = i['imDbRatingCount']
         model.TopTv.add(id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
 
+# Takes the imdbID as input.
+# Loads the User rating for given input into database.
+def loadUserRatings(id):
+    imdbID, total_rating, total_rating_votes, rating_percents, rating_votes = getUserRatingDataV2(id)
+    model.UserRatings.add(imdbID, total_rating, total_rating_votes, rating_percents[0], rating_votes[0], rating_percents[1],
+                              rating_votes[1], rating_percents[2], rating_votes[2], rating_percents[3], rating_votes[3],
+                              rating_percents[4],rating_votes[4],rating_percents[5],rating_votes[5],rating_percents[6],
+                              rating_votes[6],rating_percents[7],rating_votes[7], rating_percents[8],rating_votes[8],
+                              rating_percents[9],rating_votes[9])
 
-# loadTopTv()
 
-print(getUserRatingDataV2("tt1375666"))
+rawInput = [1, 50, 100, 200, "Wheel of Time"]
+for i in rawInput:
+    IMDBid = getID(i)
+    loadUserRatings(IMDBid)
