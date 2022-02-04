@@ -1,20 +1,18 @@
-<h1>Project 1 Sprint 1</h1>
+<h1>Project 1 Sprint 2</h1>
 <h2>Michael Hebner</h2>
 <body>
     <p>Requires no additional install</p>
     <h3>This is what the project does</h3>
     <ul>
-        <li>Gets the Top 250 shows from IMDB api and writes the response to a json file in the project directory.
-            I did this to cut down on api requests.</li>
-        <li>Gets the IMDB id for a show. Can give the function either a (int) rank or a (str) name.
-            For example, 1 or "Lost" are acceptable inputs. Returns id as a string.</li>
-        <li>Gets user ratings for a show given the IMDB id. Then formats the response into a readable format
-            and writes it to the text file in the project directory.</li>
-        <li>Formats the Top 250 shows, from the json file in the project directory, into a readable format 
-            and writes them in ascending order to the text file in the project directory.</li>
+        <li>To incorporate the SQlite database, I created model.py to handle queries and other database specific tasks.
+        It treats each table like its own class, each having their own functions to query the database.</li>
+        <li>I adjusted my original code from sprint 1 to work with a database, rather than a text file. getUserRating()
+        , for example, returns the data as variables rather than writing them directly to a file. </li>
+        <li>Getting user ratings for a specific show requires the imdbID. The function I created can take either rank or
+        name for a given title, and it will return the imdbID.</li>
     </ul>
     <h3>Missing or Not Working</h3>
     <ul>
-        <li>N/A</li>
+        <li>Not complete at the moment. Need to fully implement testing.</li>
     </ul>
 </body>
