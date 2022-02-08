@@ -9,11 +9,11 @@ def open_db(filename: str) -> Tuple[sqlite3.Connection, sqlite3.Cursor]:
     return db_connection, cursor
 
 
-def runSQLfile(fileName):
+def runSQLfile(fileName, dbName):
     file = open(fileName, 'r')
     sqlFile = file.read()
     file.close()
-    conn, cursor = open_db('imdb.sqlite')
+    conn, cursor = open_db(dbName)
     cmds = sqlFile.split(';')
     for cmd in cmds:
         conn.execute(cmd)
@@ -35,17 +35,17 @@ class TopTv:
         return "%s - %s (%s)" % (self.rank, self.title, self.year)
 
     @classmethod
-    def add(cls, id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count):
+    def add(cls, dbName, id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count):
         query = "INSERT INTO TopShows(id, rank,  title, full_title, year, crew, imdb_rating, imdb_rating_count)" \
                 " VALUES (?,?,?,?,?,?,?,?)"
-        conn, cursor = open_db('imdb.sqlite')
+        conn, cursor = open_db(dbName)
         conn.execute(query, (id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count))
         conn.commit()
 
     @classmethod
-    def delete(cls, id):
+    def delete(cls, dbName, id):
         q = "SELECT COUNT(id) FROM TopShows WHERE id=(?)"
-        conn, cursor = open_db('imdb.sqlite')
+        conn, cursor = open_db(dbName)
         response = conn.execute(q, (id,))
         if len(response.fetchall()) > 0:
             q = "DELETE FROM TopShows WHERE id=(?)"
@@ -56,6 +56,12 @@ class TopTv:
         else:
             return 0
 
+    @classmethod
+    def get(cls,dbName, id):
+        q = "SELECT * FROM TopShows WHERE id=(?)"
+        conn, cursor = open_db(dbName)
+        response = conn.execute(q,(id,))
+        return response.fetchall()
 
 class UserRatings:
 
@@ -88,7 +94,7 @@ class UserRatings:
         self.rating_1_votes = rating_1_votes
 
     @classmethod
-    def add(cls, imdbID, total_rating, total_rating_votes, rating_10, rating_10_votes, rating_9, rating_9_votes,
+    def add(cls, dbName, imdbID, total_rating, total_rating_votes, rating_10, rating_10_votes, rating_9, rating_9_votes,
             rating_8, rating_8_votes, rating_7, rating_7_votes, rating_6, rating_6_votes, rating_5, rating_5_votes,
             rating_4, rating_4_votes, rating_3, rating_3_votes, rating_2, rating_2_votes, rating_1,
             rating_1_votes):
@@ -96,7 +102,7 @@ class UserRatings:
                 "rating_9, rating_9_votes,rating_8, rating_8_votes, rating_7, rating_7_votes, rating_6, rating_6_votes," \
                 "rating_5, rating_5_votes,rating_4, rating_4_votes, rating_3, rating_3_votes, rating_2, rating_2_votes," \
                 "rating_1,rating_1_votes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        conn, cursor = open_db('imdb.sqlite')
+        conn, cursor = open_db(dbName)
         conn.execute(query,
                      (imdbID, total_rating, total_rating_votes, rating_10, rating_10_votes, rating_9, rating_9_votes,
                       rating_8, rating_8_votes, rating_7, rating_7_votes, rating_6, rating_6_votes, rating_5,
@@ -106,9 +112,9 @@ class UserRatings:
         conn.commit()
 
     @classmethod
-    def delete(cls, imdbID):
+    def delete(cls, dbName, imdbID):
         q = "SELECT COUNT(imdbID) FROM User_Ratings WHERE imdbID=(?)"
-        conn, cursor = open_db('imdb.sqlite')
+        conn, cursor = open_db(dbName)
         response = conn.execute(q, (imdbID,))
         if len(response.fetchall()) > 0:
             q = "DELETE FROM User_Ratings WHERE imdbID=(?)"

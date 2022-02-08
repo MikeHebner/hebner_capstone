@@ -13,6 +13,6 @@
     </ul>
     <h3>Missing or Not Working</h3>
     <ul>
-        <li>Not complete at the moment. Need to fully implement testing.</li>
+        <li>99% Complete. Everything works. Needs final review.</li>
     </ul>
 </body>

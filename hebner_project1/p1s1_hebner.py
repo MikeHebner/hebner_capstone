@@ -13,6 +13,7 @@ def getTopTv():
     data = response.json()
     with open('topTv.json', 'w') as file:
         json.dump(data, file)
+    # Only returns len(data) for test.py purposes
     return len(data)
 
 
@@ -123,14 +124,14 @@ def loadTopTv():
         crew = i['crew']
         imdb_rating = i['imDbRating']
         imdb_rating_count = i['imDbRatingCount']
-        model.TopTv.add(id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
+        model.TopTv.add('imdb.sqlite', id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
 
 
 # Takes the imdbID as input.
 # Loads the User rating for given input into database.
 def loadUserRatings(id):
     imdbID, total_rating, total_rating_votes, rating_percents, rating_votes = getUserRatingDataV2(id)
-    model.UserRatings.add(imdbID, total_rating, total_rating_votes, rating_percents[0], rating_votes[0],
+    model.UserRatings.add('imdb.sqlite', imdbID, total_rating, total_rating_votes, rating_percents[0], rating_votes[0],
                           rating_percents[1],
                           rating_votes[1], rating_percents[2], rating_votes[2], rating_percents[3], rating_votes[3],
                           rating_percents[4], rating_votes[4], rating_percents[5], rating_votes[5], rating_percents[6],
@@ -138,13 +139,13 @@ def loadUserRatings(id):
                           rating_percents[9], rating_votes[9])
 
 
-# Loads schema into database.
-model.runSQLfile('schema.sql')
-# Required user ratings to get stored in array
-rawInput = [1, 50, 100, 200, "Wheel of Time"]
-# loads top 250 shows into db table.
-loadTopTv()
-# Gets IMDB id for each input, then queries user ratings with the returned input.
-for i in rawInput:
-    IMDBid = getID(i)
-    loadUserRatings(IMDBid)
+# # Loads schema into database.
+# model.runSQLfile('schema.sql', 'imdb.sqlite')
+# # Required user ratings to get stored in array
+# rawInput = [1, 50, 100, 200, "Wheel of Time"]
+# # loads top 250 shows into db table.
+# loadTopTv()
+# # Gets IMDB id for each input, then queries user ratings with the returned input.
+# for i in rawInput:
+#     IMDBid = getID(i)
+#     loadUserRatings(IMDBid)
