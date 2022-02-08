@@ -9,6 +9,16 @@ def open_db(filename: str) -> Tuple[sqlite3.Connection, sqlite3.Cursor]:
     return db_connection, cursor
 
 
+def runSQLfile(fileName):
+    file = open(fileName, 'r')
+    sqlFile = file.read()
+    file.close()
+    conn, cursor = open_db('imdb.sqlite')
+    cmds = sqlFile.split(';')
+    for cmd in cmds:
+        conn.execute(cmd)
+
+
 class TopTv:
 
     def __init__(self, id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count):
@@ -108,6 +118,3 @@ class UserRatings:
             return 1
         else:
             return 0
-
-
-

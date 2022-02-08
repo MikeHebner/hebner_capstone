@@ -13,6 +13,7 @@ def getTopTv():
     data = response.json()
     with open('topTv.json', 'w') as file:
         json.dump(data, file)
+    return len(data)
 
 
 # opens the main text file and appends the list of top 250 shows to it
@@ -137,7 +138,13 @@ def loadUserRatings(id):
                           rating_percents[9], rating_votes[9])
 
 
+# Loads schema into database.
+model.runSQLfile('schema.sql')
+# Required user ratings to get stored in array
 rawInput = [1, 50, 100, 200, "Wheel of Time"]
+# loads top 250 shows into db table.
+loadTopTv()
+# Gets IMDB id for each input, then queries user ratings with the returned input.
 for i in rawInput:
     IMDBid = getID(i)
     loadUserRatings(IMDBid)
