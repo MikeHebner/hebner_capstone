@@ -95,22 +95,6 @@ def getID(notID):
         return "INVALID INPUT"
 
 
-# Below is where all the work was done.
-# I saved the ranks to get as an array, so I could loop the ideas through faster
-# ranksToGet = [1, 50, 100, 200]
-# I've commented this out b/c it has done its job.
-# for i in ranksToGet:
-#     IMDBid = getID(i)
-#     getUserRatingData(IMDBid)
-#
-# wot = "Wheel of Time"
-# wotID = getID(wot)
-# getUserRatingData(wotID)
-#
-#
-# This function writes the top 250 shows to the text file.
-# putTopTv()
-
 def loadTopTv():
     file = open("topTv.json")
     data = json.loads(file.read())
@@ -139,13 +123,13 @@ def loadUserRatings(id):
                           rating_percents[9], rating_votes[9])
 
 
-# # Loads schema into database.
-# model.runSQLfile('schema.sql', 'imdb.sqlite')
-# # Required user ratings to get stored in array
-# rawInput = [1, 50, 100, 200, "Wheel of Time"]
-# # loads top 250 shows into db table.
-# loadTopTv()
-# # Gets IMDB id for each input, then queries user ratings with the returned input.
-# for i in rawInput:
-#     IMDBid = getID(i)
-#     loadUserRatings(IMDBid)
+# Loads schema into database.
+model.runSQLfile('schema.sql', 'imdb.sqlite')
+# Required user ratings to get stored in array
+rawInput = [1, 50, 100, 200, "Wheel of Time"]
+# loads top 250 shows into db table.
+loadTopTv()
+# Gets IMDB id for each input, then queries user ratings with the returned input.
+for i in rawInput:
+    IMDBid = getID(i)
+    loadUserRatings(IMDBid)
