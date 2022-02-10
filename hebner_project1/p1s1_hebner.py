@@ -64,12 +64,21 @@ def getUserRatingDataV2(id):
     # Each is a row in rating_i_votes
     ratingVotes = []
     ratings = data['ratings']
-    for i in ratings:
-        percent = i['percent']
-        percent = percent[:-1]
-        votes = i['votes']
-        ratingPercents.append(percent)
-        ratingVotes.append(votes)
+    # Ran into an issue of a top show having no ratings returned.
+    # If this happens, dummy data is added to those rows.
+    if len(ratings) == 0:
+        for i in range(10):
+            percent = 10 - i
+            votes = 10 - i
+            ratingPercents.append(percent)
+            ratingVotes.append(votes)
+    else:
+        for i in ratings:
+            percent = i['percent']
+            percent = percent[:-1]
+            votes = i['votes']
+            ratingPercents.append(percent)
+            ratingVotes.append(votes)
     return imdbID, total_rating, total_rating_votes, ratingPercents, ratingVotes
 
 
@@ -132,4 +141,5 @@ loadTopTv()
 # Gets IMDB id for each input, then queries user ratings with the returned input.
 for i in rawInput:
     IMDBid = getID(i)
+    print(IMDBid)
     loadUserRatings(IMDBid)

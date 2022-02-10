@@ -57,11 +57,12 @@ class TopTv:
             return 0
 
     @classmethod
-    def get(cls,dbName, id):
+    def get(cls, dbName, id):
         q = "SELECT * FROM TopShows WHERE id=(?)"
         conn, cursor = open_db(dbName)
-        response = conn.execute(q,(id,))
+        response = conn.execute(q, (id,))
         return response.fetchall()
+
 
 class UserRatings:
 
@@ -124,3 +125,32 @@ class UserRatings:
             return 1
         else:
             return 0
+
+
+# One class to cover  both TV shows and Movies
+class PopularMedia:
+
+    def __init__(self, imDbId, rank, rankUpDown, title, fullTitle, year, image, crew, imDbRating, imDbRatingCount):
+        self.imDbId = imDbId
+        self.rank = rank
+        self.rankUpDown = rankUpDown
+        self.title = title
+        self.fullTitle = fullTitle
+        self.year = year
+        self.image = image
+        self.crew = crew
+        self.imDbRating = imDbRating
+        self.imDbRatingCount = imDbRatingCount
+
+    @classmethod
+    def add(cls, dbName, tableName, imDbId, rank, rankUpDown, title, full_title, year, image, crew, imDbRating,
+            imDbRatingCount):
+        query = '"-- noinspection SqlResolve\nINSERT INTO {}(imDbId, rank, rankUpDown, title, full_title, year, image, crew, imDbRating, " \\n                "imDbRatingCount)" \\n                "VALUES (?,?,?,?,?,?,?,?,?,?)"'.format(tableName)
+        conn, cursor = open_db(dbName)
+        conn.execute(query,
+                     (imDbId, rank, rankUpDown, title, full_title, year, image, crew, imDbRating,
+                      imDbRatingCount))
+        conn.commit()
+
+
+PopularMedia.add('imdb.sqlite', 'popular_movies', 'test', 1, 1, 'title', 'full', 'year', 'image', 'crew', 'rat', 'ratt')

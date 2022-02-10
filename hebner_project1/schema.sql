@@ -40,3 +40,35 @@ CREATE TABLE User_Ratings
   rating_1_votes INT NOT NULL,
   FOREIGN KEY (imdbID) REFERENCES TopShows(id)
 );
+
+DROP TABLE IF EXISTS popular_shows;
+CREATE TABLE popular_shows
+(
+    imDbId VARCHAR NOT NULL,
+    rank INT NOT NULL,
+    rankUpDown INT NOT NULL,
+    title INT NOT NULL,
+    full_title INT NOT NULL,
+    year INT NOT NULL,
+    image VARCHAR NOT NULL,
+    crew VARCHAR NOT NULL,
+    imDbRating VARCHAR NOT NULL,
+    imDbRatingCount VARCHAR NOT NULL,
+    PRIMARY KEY (imDbId)
+);
+
+DROP TABLE IF EXISTS popular_movies;
+CREATE TABLE popular_movies
+(
+    imDbId VARCHAR NOT NULL,
+    rank INT NOT NULL,
+    rankUpDown INT NOT NULL,
+    title VARCHAR NOT NULL,
+    full_title VARCHAR NOT NULL,
+    year INT NOT NULL,
+    image VARCHAR NOT NULL,
+    crew VARCHAR NOT NULL,
+    imDbRating VARCHAR NOT NULL,
+    imDbRatingCount VARCHAR NOT NULL,
+    PRIMARY KEY (imDbId)
+);
