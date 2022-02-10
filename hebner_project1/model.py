@@ -145,7 +145,8 @@ class PopularMedia:
     @classmethod
     def add(cls, dbName, tableName, imDbId, rank, rankUpDown, title, full_title, year, image, crew, imDbRating,
             imDbRatingCount):
-        query = '"-- noinspection SqlResolve\nINSERT INTO {}(imDbId, rank, rankUpDown, title, full_title, year, image, crew, imDbRating, " \\n                "imDbRatingCount)" \\n                "VALUES (?,?,?,?,?,?,?,?,?,?)"'.format(tableName)
+        query = 'INSERT INTO {}(imDbId, rank, rankUpDown, title, full_title, year, image, crew,' \
+                ' imDbRating,imDbRatingCount) VALUES (?,?,?,?,?,?,?,?,?,?)"'.format(tableName)
         conn, cursor = open_db(dbName)
         conn.execute(query,
                      (imDbId, rank, rankUpDown, title, full_title, year, image, crew, imDbRating,
