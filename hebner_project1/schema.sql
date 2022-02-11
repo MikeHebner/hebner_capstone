@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS TopShows;
 CREATE TABLE TopShows
 (
-  id INT NOT NULL,
+  imDbId INT NOT NULL,
   rank INT NOT NULL,
   title VARCHAR NOT NULL,
   full_title VARCHAR NOT NULL,
@@ -9,13 +9,13 @@ CREATE TABLE TopShows
   crew VARCHAR NOT NULL,
   imdb_rating VARCHAR NOT NULL,
   imdb_rating_count INT NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (imDbId)
 );
 
 DROP TABLE IF EXISTS User_Ratings;
 CREATE TABLE User_Ratings
 (
-  imdbID VARCHAR NOT NULL,
+  imDbId VARCHAR NOT NULL,
   total_rating INT NOT NULL,
   total_rating_votes INT NOT NULL,
   rating_10 INT NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE User_Ratings
   rating_2_votes INT NOT NULL,
   rating_1 INT NOT NULL,
   rating_1_votes INT NOT NULL,
-  FOREIGN KEY (imdbID) REFERENCES TopShows(id)
+  FOREIGN KEY (imdbId) REFERENCES TopShows(imDbId)
 );
 
 DROP TABLE IF EXISTS popular_shows;

@@ -3,6 +3,8 @@ import json
 import requests
 import secrets
 import model
+
+
 # add comment to test workflow
 
 
@@ -13,6 +15,8 @@ def getTopTv():
     response = requests.get(url)
     data = response.json()
     with open('topTv.json', 'w') as file:
+        # Erase contents and dump updated list
+        file.truncate(0)
         json.dump(data, file)
     # Only returns len(data) for test.py purposes
     return len(data)
@@ -57,7 +61,7 @@ def getUserRatingDataV2(id):
     url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.IMDB_KEY, id)
     response = requests.get(url)
     data = response.json()
-    imdbID = data['imDbId']
+    imDbId = data['imDbId']
     total_rating = data['totalRating']
     total_rating_votes = data['totalRatingVotes']
     # Each is a row in rating_i
@@ -80,7 +84,7 @@ def getUserRatingDataV2(id):
             votes = i['votes']
             ratingPercents.append(percent)
             ratingVotes.append(votes)
-    return imdbID, total_rating, total_rating_votes, ratingPercents, ratingVotes
+    return imDbId, total_rating, total_rating_votes, ratingPercents, ratingVotes
 
 
 # Returns imdb id from rank off of top 250 shows or by name
@@ -110,7 +114,7 @@ def loadTopTv():
     data = json.loads(file.read())
     file.close()
     for i in data['items']:
-        id = i['id']
+        imDbId = i['id']
         rank = i['rank']
         title = i['title']
         full_title = i['fullTitle']
@@ -118,14 +122,14 @@ def loadTopTv():
         crew = i['crew']
         imdb_rating = i['imDbRating']
         imdb_rating_count = i['imDbRatingCount']
-        model.TopTv.add('imdb.sqlite', id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
+        model.TopTv.add('imdb.sqlite', imDbId, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
 
 
 # Takes the imdbID as input.
 # Loads the User rating for given input into database.
 def loadUserRatings(id):
-    imdbID, total_rating, total_rating_votes, rating_percents, rating_votes = getUserRatingDataV2(id)
-    model.UserRatings.add('imdb.sqlite', imdbID, total_rating, total_rating_votes, rating_percents[0], rating_votes[0],
+    imDbId, total_rating, total_rating_votes, rating_percents, rating_votes = getUserRatingDataV2(id)
+    model.UserRatings.add('imdb.sqlite', imDbId, total_rating, total_rating_votes, rating_percents[0], rating_votes[0],
                           rating_percents[1],
                           rating_votes[1], rating_percents[2], rating_votes[2], rating_percents[3], rating_votes[3],
                           rating_percents[4], rating_votes[4], rating_percents[5], rating_votes[5], rating_percents[6],
@@ -133,14 +137,56 @@ def loadUserRatings(id):
                           rating_percents[9], rating_votes[9])
 
 
-# Loads schema into database.
-model.runSQLfile('schema.sql', 'imdb.sqlite')
-# Required user ratings to get stored in array
-rawInput = [1, 50, 100, 200, "Wheel of Time"]
-# loads top 250 shows into db table.
-loadTopTv()
-# Gets IMDB id for each input, then queries user ratings with the returned input.
-for i in rawInput:
-    IMDBid = getID(i)
-    print(IMDBid)
-    loadUserRatings(IMDBid)
+# input = tv or movie
+def getPopularMedia(mediaType):
+    if mediaType == 'movie':
+        query = 'https://imdb-api.com/en/API/MostPopularMovies/{}'.format(secrets.IMDB_KEY)
+        response = requests.get(query)
+        return response.json()
+    if mediaType == 'tv':
+        query = 'https://imdb-api.com/en/API/MostPopularTVs/{}'.format(secrets.IMDB_KEY)
+        response = requests.get(query)
+        return response.json()
+    else:
+        return "ERROR: {} = INVALID INPUT--MUST BE 'tv' or 'movie".format(mediaType)
+
+
+def loadPopularMedia(dbName, tableName, data):
+    for i in data['items']:
+        imDbId = i['id']
+        rank = i['rank']
+        rankUpDown = i['rankUpDown']
+        title = i['title']
+        full_title = i['fullTitle']
+        year = i['year']
+        image = i['image']
+        crew = i['crew']
+        imDbRating = i['imDbRating']
+        imDbRatingCount = i['imDbRatingCount']
+        model.PopularMedia.add(dbName, tableName, imDbId, rank, rankUpDown, title, full_title,
+                               year, image, crew, imDbRating, imDbRatingCount)
+
+
+def getBigMover(direction):
+    return 1
+
+
+def main():
+    # Drop and Create Tables
+    model.runSQLfile('schema.sql', 'imdb.sqlite')
+    # Raw input for userRatings
+    rawInput = [1, 50, 100, 200, "Wheel of Time"]
+    getTopTv()
+    loadTopTv()
+    for i in rawInput:
+        imDbId = getID(i)
+        print(imDbId)
+        loadUserRatings(imDbId)
+    movieData = getPopularMedia('movie')
+    tvData = getPopularMedia('tv')
+    loadPopularMedia('imdb.sqlite', 'popular_movies', movieData)
+    loadPopularMedia('imdb.sqlite', 'popular_shows', tvData)
+
+
+if __name__ == "__main__":
+    main()
