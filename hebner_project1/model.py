@@ -162,10 +162,11 @@ class PopularMedia:
             direction = ' rankUpDown DESC'
         else:
             direction = 'rankUpDown'
-        query = 'SELECT * FROM {} ORDER BY {} LIMIT {}'.format(tableName,direction,amount)
+        query = 'SELECT * FROM {} ORDER BY {} LIMIT {}'.format(tableName, direction, amount)
         conn, cursor = open_db(dbName)
         response = conn.execute(query)
         return response.fetchall()
+
 
 x = PopularMedia.getBigMover('imdb.sqlite', 'popular_movies', '_', '3')
 
