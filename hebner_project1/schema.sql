@@ -72,3 +72,13 @@ CREATE TABLE popular_movies
     imDbRatingCount VARCHAR NOT NULL,
     PRIMARY KEY (imDbId)
 );
+
+DROP TABLE IF EXISTS big_movers_movies;
+CREATE TABLE big_movers_movies
+(
+    imDbId VARCHAR NOT NULL,
+    rank INT NOT NULL,
+    rankUpDown INT NOT NULL,
+    PRIMARY KEY (imDbId),
+    FOREIGN KEY (imDbId) REFERENCES popular_movies(imDbId)
+)

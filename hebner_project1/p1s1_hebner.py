@@ -167,10 +167,6 @@ def loadPopularMedia(dbName, tableName, data):
                                year, image, crew, imDbRating, imDbRatingCount)
 
 
-def getBigMover(direction):
-    return 1
-
-
 def main():
     # Drop and Create Tables
     model.runSQLfile('schema.sql', 'imdb.sqlite')
@@ -180,12 +176,23 @@ def main():
     loadTopTv()
     for i in rawInput:
         imDbId = getID(i)
-        print(imDbId)
         loadUserRatings(imDbId)
     movieData = getPopularMedia('movie')
     tvData = getPopularMedia('tv')
     loadPopularMedia('imdb.sqlite', 'popular_movies', movieData)
     loadPopularMedia('imdb.sqlite', 'popular_shows', tvData)
+    upMovers = model.PopularMedia.getBigMover('imdb.sqlite', 'popular_movies', '+', '3')
+    downMovers = model.PopularMedia.getBigMover('imdb.sqlite', 'popular_movies','','1')
+    for i in upMovers:
+        imDbId = i[0]
+        rank = i[1]
+        rankUpDown = i[2]
+        model.PopularMedia.addBigMovers('imdb.sqlite', 'big_movers_movies', imDbId, rank, rankUpDown)
+    for i in downMovers:
+        imDbId = i[0]
+        rank = i[1]
+        rankUpDown = i[2]
+        model.PopularMedia.addBigMovers('imdb.sqlite', 'big_movers_movies', imDbId, rank, rankUpDown)
 
 
 if __name__ == "__main__":

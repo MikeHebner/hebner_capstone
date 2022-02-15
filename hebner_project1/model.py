@@ -1,5 +1,4 @@
 import sqlite3
-import sqlite3 as sql
 from typing import Tuple
 
 
@@ -50,7 +49,7 @@ class TopTv:
         if len(response.fetchall()) > 0:
             q = "DELETE FROM TopShows WHERE imDbId=(?)"
             conn.execute(q, (imDbId,))
-            print(imDbId)
+
             conn.commit()
             return 1
         else:
@@ -120,7 +119,6 @@ class UserRatings:
         if len(response.fetchall()) > 0:
             q = "DELETE FROM User_Ratings WHERE imDbId=(?)"
             conn.execute(q, (imDbId,))
-            print(imDbId)
             conn.commit()
             return 1
         else:
@@ -167,8 +165,10 @@ class PopularMedia:
         response = conn.execute(query)
         return response.fetchall()
 
+    @classmethod
+    def addBigMovers(cls, dbName, tableName, imDbId, rank, rankUpDown):
+        query = 'INSERT INTO {}(imDbId, rank, rankUpDown) VALUES (?,?,?)'.format(tableName)
+        conn, cursor = open_db(dbName)
+        conn.execute(query, (imDbId, rank, rankUpDown))
+        conn.commit()
 
-x = PopularMedia.getBigMover('imdb.sqlite', 'popular_movies', '_', '3')
-
-for i in x:
-    print(i)
