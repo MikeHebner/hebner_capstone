@@ -17,18 +17,6 @@ def runSQLfile(fileName, dbName):
     for cmd in cmds:
         conn.execute(cmd)
 
-# Gets the top 250 TV shows and saves the json response to the project directory
-# I did this to cut down on the api request
-def getTopTv(key):
-    url = "https://imdb-api.com/en/API/Top250TVs/{}".format(key)
-    response = requests.get(url)
-    data = response.json()
-    with open('topTv.json', 'w') as file:
-        # Erase contents and dump updated list
-        file.truncate(0)
-        json.dump(data, file)
-    # Only returns len(data) for test.py purposes
-    return len(data)
 
 class TopTv:
 
