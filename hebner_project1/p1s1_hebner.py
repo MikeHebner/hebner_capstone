@@ -1,7 +1,10 @@
 # Michael Hebner
 import json
+
 import requests
-from hebner_project1 import model, secrets
+
+import model
+import secrets
 
 
 # add comment to test workflow
