@@ -12,8 +12,8 @@ import secrets
 
 # Gets the top 250 TV shows and saves the json response to the project directory
 # I did this to cut down on the api request
-def getTopTv():
-    url = "https://imdb-api.com/en/API/Top250TVs/{}".format(secrets.API_KEY)
+def getTopTv(key):
+    url = "https://imdb-api.com/en/API/Top250TVs/{}".format(key)
     response = requests.get(url)
     data = response.json()
     with open('topTv.json', 'w') as file:
@@ -174,7 +174,7 @@ def main():
     model.runSQLfile('schema.sql', 'imdb.sqlite')
     # Raw input for userRatings
     rawInput = [1, 50, 100, 200, "Wheel of Time"]
-    getTopTv()
+    getTopTv(secrets.API_KEY)
     loadTopTv()
     for i in rawInput:
         imDbId = getID(i)
