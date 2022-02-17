@@ -20,7 +20,7 @@ def getTopTv():
         # Erase contents and dump updated list
         file.truncate(0)
         json.dump(data, file)
-    # Only returns len(data) for tests.py purposes
+    # Only returns len(data) for test.py purposes
     return len(data)
 
 
