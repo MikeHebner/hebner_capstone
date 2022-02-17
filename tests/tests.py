@@ -37,7 +37,7 @@ class TestTwo(unittest.TestCase):
         crew = testShow['items']['crew']
         imdb_rating = testShow['items']['imDbRating']
         imdb_rating_count = testShow['items']['imDbRatingCount']
-        model.runSQLfile('../tests/schema.sql', 'tester.sqlite')
+        model.runSQLfile('schema.sql', 'tester.sqlite')
         model.TopTv.add('tester.sqlite', id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
         check = model.TopTv.get('tester.sqlite', id)
         try:
@@ -105,7 +105,7 @@ class BigMovers(unittest.TestCase):
                 "imDbRating": "6.5",
                 "imDbRatingCount": "45661"
             }]
-        model.runSQLfile('../tests/schema.sql', 'tester.sqlite')
+        model.runSQLfile('schema.sql', 'tester.sqlite')
         for i in happyData:
             imDbId = i['id']
             rank = i['rank']
@@ -187,7 +187,7 @@ class BigMovers(unittest.TestCase):
                 "imDbRating": "6.5",
                 "imDbRatingCount": "45661"
             }]
-        model.runSQLfile('../tests/schema.sql', 'tester.sqlite')
+        model.runSQLfile('schema.sql', 'tester.sqlite')
         for i in badData:
             imDbId = i['id']
             rank = i['rank']
@@ -219,7 +219,7 @@ class BigMovers(unittest.TestCase):
         correctTables = ['TopShows', 'User_Ratings', 'popular_shows', 'popular_movies', 'big_movers_movies']
         counter = 0
         query = 'SELECT tbl_name FROM main.sqlite_master WHERE type==(?)'
-        conn, cursor = model.open_db('../tests/tester.sqlite')
+        conn, cursor = model.open_db('tester.sqlite')
         response = conn.execute(query, ('table',))
         response = response.fetchall()
         for x in range(len(response)):
