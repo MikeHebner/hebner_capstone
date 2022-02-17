@@ -2,7 +2,6 @@ import unittest
 from hebner_project1 import p1s1_hebner, model
 
 
-
 class Test250(unittest.TestCase):
     def test(self):
         self.assertTrue(p1s1_hebner.getTopTv(), 250)
