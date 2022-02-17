@@ -3,8 +3,8 @@ import json
 
 import requests
 
-from hebner_project1 import model
-from hebner_project1 import secrets
+import model
+import secrets
 
 
 # add comment to test workflow
