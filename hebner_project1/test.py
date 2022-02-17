@@ -37,7 +37,7 @@ class TestTwo(unittest.TestCase):
         crew = testShow['items']['crew']
         imdb_rating = testShow['items']['imDbRating']
         imdb_rating_count = testShow['items']['imDbRatingCount']
-        model.runSQLfile('schema.sql', 'tester.sqlite')
+        model.runSQLfile('hebner_project1/schema.sql', 'tester.sqlite')
         model.TopTv.add('tester.sqlite', id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
         check = model.TopTv.get('tester.sqlite', id)
         try:
