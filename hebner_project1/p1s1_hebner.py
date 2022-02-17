@@ -13,7 +13,7 @@ import secrets
 # Gets the top 250 TV shows and saves the json response to the project directory
 # I did this to cut down on the api request
 def getTopTv():
-    url = "https://imdb-api.com/en/API/Top250TVs/{}".format(secrets.IMDB_KEY)
+    url = "https://imdb-api.com/en/API/Top250TVs/{}".format(secrets.API_KEY)
     response = requests.get(url)
     data = response.json()
     with open('topTv.json', 'w') as file:
@@ -43,7 +43,7 @@ def putTopTv():
 # Formats the returned rating into a readable format
 # Appends it to the main text file
 def getUserRatingData(id):
-    url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.IMDB_KEY, id)
+    url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.API_KEY, id)
     response = requests.get(url)
     data = response.json()
     title = data['title']
@@ -60,7 +60,7 @@ def getUserRatingData(id):
 # I will delete above function once grading for sprint 1 is complete.
 # This function is doing the same, just for database instead of txt file.
 def getUserRatingDataV2(id):
-    url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.IMDB_KEY, id)
+    url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.API_KEY, id)
     response = requests.get(url)
     data = response.json()
     imDbId = data['imDbId']
@@ -103,7 +103,7 @@ def getID(notID):
     # get id from (str) name
     if type(notID) is str:
         name = notID
-        url = "https://imdb-api.com/en/API/SearchSeries/{}/{}".format(secrets.IMDB_KEY, name)
+        url = "https://imdb-api.com/en/API/SearchSeries/{}/{}".format(secrets.API_KEY, name)
         response = requests.get(url)
         data = response.json()
         return data["results"][0]["id"]
@@ -142,11 +142,11 @@ def loadUserRatings(id):
 # input = tv or movie
 def getPopularMedia(mediaType):
     if mediaType == 'movie':
-        query = 'https://imdb-api.com/en/API/MostPopularMovies/{}'.format(secrets.IMDB_KEY)
+        query = 'https://imdb-api.com/en/API/MostPopularMovies/{}'.format(secrets.API_KEY)
         response = requests.get(query)
         return response.json()
     if mediaType == 'tv':
-        query = 'https://imdb-api.com/en/API/MostPopularTVs/{}'.format(secrets.IMDB_KEY)
+        query = 'https://imdb-api.com/en/API/MostPopularTVs/{}'.format(secrets.API_KEY)
         response = requests.get(query)
         return response.json()
     else:
