@@ -99,9 +99,10 @@ class UserRatings:
             rating_4, rating_4_votes, rating_3, rating_3_votes, rating_2, rating_2_votes, rating_1,
             rating_1_votes):
         query = "INSERT INTO User_Ratings(imDbId, total_rating, total_rating_votes, rating_10, rating_10_votes," \
-                "rating_9, rating_9_votes,rating_8, rating_8_votes, rating_7, rating_7_votes, rating_6, rating_6_votes," \
-                "rating_5, rating_5_votes,rating_4, rating_4_votes, rating_3, rating_3_votes, rating_2, rating_2_votes," \
-                "rating_1,rating_1_votes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                "rating_9, rating_9_votes,rating_8, rating_8_votes, rating_7, rating_7_votes, rating_6," \
+                " rating_6_votes, rating_5, rating_5_votes,rating_4, rating_4_votes, rating_3, rating_3_votes," \
+                " rating_2, rating_2_votes, rating_1,rating_1_votes)" \
+                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
         conn, cursor = open_db(dbName)
         conn.execute(query,
                      (imDbId, total_rating, total_rating_votes, rating_10, rating_10_votes, rating_9, rating_9_votes,
@@ -151,7 +152,7 @@ class PopularMedia:
                       imDbRatingCount))
         conn.commit()
 
-    # direction = '+' or '-'; + corresponds to positive change, - to negitive change
+    # direction = '+' or '-'; + corresponds to positive change, - to negative change
     # amount = how many entries you want returned; 5 = 5 movies
     # Returns the movie(s) with the largest rankUpDown change
     @classmethod

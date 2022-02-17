@@ -182,7 +182,7 @@ def main():
     loadPopularMedia('imdb.sqlite', 'popular_movies', movieData)
     loadPopularMedia('imdb.sqlite', 'popular_shows', tvData)
     upMovers = model.PopularMedia.getBigMover('imdb.sqlite', 'popular_movies', '+', '3')
-    downMovers = model.PopularMedia.getBigMover('imdb.sqlite', 'popular_movies','','1')
+    downMovers = model.PopularMedia.getBigMover('imdb.sqlite', 'popular_movies', '', '1')
     for i in upMovers:
         imDbId = i[0]
         rank = i[1]
