@@ -2,7 +2,7 @@
 import json
 import requests
 import secrets
-import model
+from hebner_project1 import model
 
 
 # add comment to test workflow
