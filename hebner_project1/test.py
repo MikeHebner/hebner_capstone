@@ -105,7 +105,7 @@ class BigMovers(unittest.TestCase):
                 "imDbRating": "6.5",
                 "imDbRatingCount": "45661"
             }]
-        model.runSQLfile('schema.sql', 'tester.sqlite')
+        model.runSQLfile('hebner_project1/schema.sql', 'tester.sqlite')
         for i in happyData:
             imDbId = i['id']
             rank = i['rank']
@@ -187,7 +187,7 @@ class BigMovers(unittest.TestCase):
                 "imDbRating": "6.5",
                 "imDbRatingCount": "45661"
             }]
-        model.runSQLfile('schema.sql', 'tester.sqlite')
+        model.runSQLfile('hebner_project1/schema.sql', 'tester.sqlite')
         for i in badData:
             imDbId = i['id']
             rank = i['rank']
