@@ -172,4 +172,3 @@ class PopularMedia:
         conn, cursor = open_db(dbName)
         conn.execute(query, (imDbId, rank, rankUpDown))
         conn.commit()
-
