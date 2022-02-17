@@ -1,6 +1,6 @@
 import unittest
-import hebner_project1.p1s1_hebner as p1s1_hebner
-import hebner_project1.model as model
+import p1s1_hebner
+import model
 
 
 class Test250(unittest.TestCase):
@@ -37,7 +37,7 @@ class TestTwo(unittest.TestCase):
         crew = testShow['items']['crew']
         imdb_rating = testShow['items']['imDbRating']
         imdb_rating_count = testShow['items']['imDbRatingCount']
-        model.runSQLfile('test_schema.sql', 'tester.sqlite')
+        model.runSQLfile('schema.sql', 'tester.sqlite')
         model.TopTv.add('tester.sqlite', id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
         check = model.TopTv.get('tester.sqlite', id)
         try:
@@ -105,7 +105,7 @@ class BigMovers(unittest.TestCase):
                 "imDbRating": "6.5",
                 "imDbRatingCount": "45661"
             }]
-        model.runSQLfile('test_schema.sql', 'tester.sqlite')
+        model.runSQLfile('schema.sql', 'tester.sqlite')
         for i in happyData:
             imDbId = i['id']
             rank = i['rank']
@@ -187,7 +187,7 @@ class BigMovers(unittest.TestCase):
                 "imDbRating": "6.5",
                 "imDbRatingCount": "45661"
             }]
-        model.runSQLfile('test_schema.sql', 'tester.sqlite')
+        model.runSQLfile('schema.sql', 'tester.sqlite')
         for i in badData:
             imDbId = i['id']
             rank = i['rank']
