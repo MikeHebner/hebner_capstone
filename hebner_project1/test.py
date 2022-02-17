@@ -1,11 +1,12 @@
 import unittest
 import p1s1_hebner
 import model
+import secrets
 
 
 class Test250(unittest.TestCase):
     def test(self):
-        self.assertTrue(p1s1_hebner.getTopTv(), 250)
+        self.assertTrue(p1s1_hebner.getTopTv(secrets.API_KEY), 250)
 
 
 class TestTwo(unittest.TestCase):
