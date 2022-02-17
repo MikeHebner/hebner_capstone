@@ -216,7 +216,17 @@ class BigMovers(unittest.TestCase):
             print(msg)
 
     def test_table_exist(self):
-        query = 'SELECT tbl_name FROM main.sqlite_master'
+        correctTables = ['TopShows', 'User_Ratings', 'popular_shows', 'popular_movies', 'big_movers_movies']
+        counter = 0
+        query = 'SELECT tbl_name FROM main.sqlite_master WHERE type==(?)'
         conn, cursor = model.open_db('tester.sqlite')
-        response = conn.execute(query)
-        print(response.fetchall())
+        response = conn.execute(query, ('table',))
+        response = response.fetchall()
+        for x in range(len(response)):
+            for y in range(len(correctTables)):
+                if response[x][0] == correctTables[y]:
+                    counter += 1
+        try:
+            self.assertEqual(counter, len(correctTables), "Missing Tables")
+        except AssertionError as msg:
+            print(msg)
