@@ -1,6 +1,6 @@
 import unittest
-import p1s1_hebner
-import model
+from hebner_project1 import p1s1_hebner, model
+
 
 
 class Test250(unittest.TestCase):
