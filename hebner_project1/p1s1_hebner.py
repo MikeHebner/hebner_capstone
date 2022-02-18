@@ -123,19 +123,23 @@ def load_top_tv():
         crew = i['crew']
         imdb_rating = i['imDbRating']
         imdb_rating_count = i['imDbRatingCount']
-        model.TopTv.add('imdb.sqlite', imdb_id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
+        model.TopTv.add('imdb.sqlite', imdb_id, rank, title, full_title, year,
+                        crew, imdb_rating, imdb_rating_count)
 
 
 # Takes the imdbID as input.
 # Loads the User rating for given input into database.
 def load_user_ratings(id):
-    imdb_id, total_rating, total_rating_votes, rating_percents, rating_votes = get_user_rating_data_v2(id)
-    model.UserRatings.add('imdb.sqlite', imdb_id, total_rating, total_rating_votes, rating_percents[0], rating_votes[0],
-                          rating_percents[1],
-                          rating_votes[1], rating_percents[2], rating_votes[2], rating_percents[3], rating_votes[3],
-                          rating_percents[4], rating_votes[4], rating_percents[5], rating_votes[5], rating_percents[6],
-                          rating_votes[6], rating_percents[7], rating_votes[7], rating_percents[8], rating_votes[8],
-                          rating_percents[9], rating_votes[9])
+    imdb_id, total_rating, total_rating_votes, rating_percents, rating_votes\
+        = get_user_rating_data_v2(id)
+    model.UserRatings.add('imdb.sqlite', imdb_id, total_rating,
+                          total_rating_votes, rating_percents[0], rating_votes[0],
+                          rating_percents[1], rating_votes[1], rating_percents[2],
+                          rating_votes[2], rating_percents[3], rating_votes[3],
+                          rating_percents[4], rating_votes[4], rating_percents[5],
+                          rating_votes[5], rating_percents[6], rating_votes[6],
+                          rating_percents[7], rating_votes[7], rating_percents[8],
+                          rating_votes[8], rating_percents[9], rating_votes[9])
 
 
 # input = tv or movie
@@ -188,12 +192,14 @@ def main():
         imdb_id = i[0]
         rank = i[1]
         rank_up_down = i[2]
-        model.PopularMedia.add_big_movers('imdb.sqlite', 'big_movers_movies', imdb_id, rank, rank_up_down)
+        model.PopularMedia.add_big_movers('imdb.sqlite', 'big_movers_movies',
+                                          imdb_id, rank, rank_up_down)
     for i in down_movers:
         imdb_id = i[0]
         rank = i[1]
         rank_up_down = i[2]
-        model.PopularMedia.add_big_movers('imdb.sqlite', 'big_movers_movies', imdb_id, rank, rank_up_down)
+        model.PopularMedia.add_big_movers('imdb.sqlite', 'big_movers_movies',
+                                          imdb_id, rank, rank_up_down)
 
 
 if __name__ == "__main__":

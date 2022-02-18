@@ -13,7 +13,7 @@ class TestTwo(unittest.TestCase):
     # Queries the database for mock entry
     # If the length of the response is 1, the entry exists in the database.
     def test(self):
-        testShow = {
+        test_show = {
             "items":
                 {
                     "id": "tt5491994",
@@ -30,14 +30,14 @@ class TestTwo(unittest.TestCase):
                     "imDb_rating_count": "690105"
                 },
         }
-        id = testShow['items']['id']
-        rank = testShow['items']['rank']
-        title = testShow['items']['title']
-        full_title = testShow['items']['fullTitle']
-        year = testShow['items']['year']
-        crew = testShow['items']['crew']
-        imdb_rating = testShow['items']['imDb_rating']
-        imdb_rating_count = testShow['items']['imDb_rating_count']
+        id = test_show['items']['id']
+        rank = test_show['items']['rank']
+        title = test_show['items']['title']
+        full_title = test_show['items']['fullTitle']
+        year = test_show['items']['year']
+        crew = test_show['items']['crew']
+        imdb_rating = test_show['items']['imDb_rating']
+        imdb_rating_count = test_show['items']['imDb_rating_count']
         model.run_sql_file('hebner_project1/schema.sql', 'tester.sqlite')
         model.TopTv.add('tester.sqlite', id, rank, title, full_title, year, crew,
                         imdb_rating, imdb_rating_count)
@@ -59,7 +59,8 @@ class BigMovers(unittest.TestCase):
             "fullTitle": "Biggest Flop",
             "year": "2022",
             "image": "https://m.media-amazon.com/images/M"
-                     "/MV5BOTI4NDhhNGEtZjQxZC00ZTRmLThmZTctOGJmY2ZlOTc0ZGY0XkEyXkFqcGdeQXVyMTkxNjUyNQ"
+                     "/MV5BOTI4NDhhNGEtZjQxZC00ZTRmLThmZTc"
+                     "tOGJmY2ZlOTc0ZGY0XkEyXkFqcGdeQXVyMTkxNjUyNQ"
                      "@@._V1_UX128_CR0,3,128,176_AL_.jpg",
             "crew": "Guillermo del Toro (dir.), Bradley Cooper, Cate Blanchett",
             "imDb_rating": "7.2",
@@ -73,7 +74,8 @@ class BigMovers(unittest.TestCase):
                 "fullTitle": "Biggest Money",
                 "year": "2021",
                 "image": "https://m.media-amazon.com/images/M"
-                         "/MV5BZGRhYjE2NWUtN2FkNy00NGI3LTkxYWMtMDk4Yjg5ZjI3MWI2XkEyXkFqcGdeQXVyMTEyMjM2NDc2"
+                         "/MV5BZGRhYjE2NWUtN2FkNy00NGI3LTkxYWM"
+                         "tMDk4Yjg5ZjI3MWI2XkEyXkFqcGdeQXVyMTEyMjM2NDc2"
                          "._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Jane Campion (dir.), Benedict Cumberbatch, Kirsten Dunst",
                 "imDb_rating": "6.9",
@@ -87,7 +89,8 @@ class BigMovers(unittest.TestCase):
                 "fullTitle": "Lil Flop",
                 "year": "2022",
                 "image": "https://m.media-amazon.com/images/M"
-                         "/MV5BNjI4ZTQ1OTYtNTI0Yi00M2EyLThiNjMtMzk1MmZlOWMyMDQwXkEyXkFqcGdeQXVyMTEyMjM2NDc2"
+                         "/MV5BNjI4ZTQ1OTYtNTI0Yi00M2EyLThiNj"
+                         "MtMzk1MmZlOWMyMDQwXkEyXkFqcGdeQXVyMTEyMjM2NDc2"
                          "._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Kenneth Branagh (dir.), Tom Bateman, Annette Bening",
                 "imDb_rating": "6.7",
@@ -101,7 +104,8 @@ class BigMovers(unittest.TestCase):
                 "fullTitle": "Lil Money",
                 "year": "2021",
                 "image": "https://m.media-amazon.com/images/M"
-                         "/MV5BMDEzZDY2ZDktNTlmOS00NThjLThkNTEtMjE5MzI5NWEwZmRjXkEyXkFqcGdeQXVyMDA4NzMyOA"
+                         "/MV5BMDEzZDY2ZDktNTlmOS00NThjLThkNTE"
+                         "tMjE5MzI5NWEwZmRjXkEyXkFqcGdeQXVyMDA4NzMyOA"
                          "@@._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Matthew Vaughn (dir.), Ralph Fiennes, Gemma Arterton",
                 "imDb_rating": "6.5",
@@ -109,7 +113,7 @@ class BigMovers(unittest.TestCase):
             }]
         model.run_sql_file('hebner_project1/schema.sql', 'tester.sqlite')
         for i in happy_data:
-            imDb_ID = i['id']
+            imdb_id = i['id']
             rank = i['rank']
             rank_up_down = i['rankUpDown']
             title = i['title']
@@ -117,11 +121,11 @@ class BigMovers(unittest.TestCase):
             year = i['year']
             image = i['image']
             crew = i['crew']
-            imDb_rating = i['imDb_rating']
-            imDb_rating_count = i['imDb_rating_count']
-            model.PopularMedia.add('tester.sqlite', 'popular_movies', imDb_ID, rank,
+            imdb_rating = i['imDb_rating']
+            imdb_rating_count = i['imDb_rating_count']
+            model.PopularMedia.add('tester.sqlite', 'popular_movies', imdb_id, rank,
                                    rank_up_down, title, full_title, year,
-                                   image, crew, imDb_rating, imDb_rating_count)
+                                   image, crew, imdb_rating, imdb_rating_count)
         up_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '+', 2)
         down_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '-', 2)
         # rankUpdown value should be positive for upMovers
@@ -142,7 +146,8 @@ class BigMovers(unittest.TestCase):
             "fullTitle": "Biggest Flop",
             "year": "2022",
             "image": "https://m.media-amazon.com/images/M"
-                     "/MV5BOTI4NDhhNGEtZjQxZC00ZTRmLThmZTctOGJmY2ZlOTc0ZGY0XkEyXkFqcGdeQXVyMTkxNjUyNQ"
+                     "/MV5BOTI4NDhhNGEtZjQxZC00ZTRmLThmZTc"
+                     "tOGJmY2ZlOTc0ZGY0XkEyXkFqcGdeQXVyMTkxNjUyNQ"
                      "@@._V1_UX128_CR0,3,128,176_AL_.jpg",
             "crew": "Guillermo del Toro (dir.), Bradley Cooper, Cate Blanchett",
             "imDb_rating": "7.2",
@@ -156,8 +161,9 @@ class BigMovers(unittest.TestCase):
                 "fullTitle": "Biggest Money",
                 "year": "2021",
                 "image": "https://m.media-amazon.com/images/M"
-                         "/MV5BZGRhYjE2NWUtN2FkNy00NGI3LTkxYWMtMDk4Yjg5ZjI3MWI2XkEyXkFqcGdeQXVyMTEyMjM2NDc2"
-                         "._V1_UX128_CR0,3,128,176_AL_.jpg",
+                         "/MV5BZGRhYjE2NWUtN2FkNy00NGI3LTkxYW"
+                         "MtMDk4Yjg5ZjI3MWI2XkEyXkFqcGdeQXVyMT"
+                         "EyMjM2NDc2._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Jane Campion (dir.), Benedict Cumberbatch, Kirsten Dunst",
                 "imDb_rating": "6.9",
                 "imDb_rating_count": "105912"
@@ -170,7 +176,8 @@ class BigMovers(unittest.TestCase):
                 "fullTitle": "Lil Flop",
                 "year": "2022",
                 "image": "https://m.media-amazon.com/images/M"
-                         "/MV5BNjI4ZTQ1OTYtNTI0Yi00M2EyLThiNjMtMzk1MmZlOWMyMDQwXkEyXkFqcGdeQXVyMTEyMjM2NDc2"
+                         "/MV5BNjI4ZTQ1OTYtNTI0Yi00M2EyLThiNjMtM"
+                         "zk1MmZlOWMyMDQwXkEyXkFqcGdeQXVyMTEyMjM2NDc2"
                          "._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Kenneth Branagh (dir.), Tom Bateman, Annette Bening",
                 "imDb_rating": "6.7",
@@ -184,7 +191,8 @@ class BigMovers(unittest.TestCase):
                 "fullTitle": "Lil Money",
                 "year": "2021",
                 "image": "https://m.media-amazon.com/images/M"
-                         "/MV5BMDEzZDY2ZDktNTlmOS00NThjLThkNTEtMjE5MzI5NWEwZmRjXkEyXkFqcGdeQXVyMDA4NzMyOA"
+                         "/MV5BMDEzZDY2ZDktNTlmOS00NThjLThkNTEtMjE"
+                         "5MzI5NWEwZmRjXkEyXkFqcGdeQXVyMDA4NzMyOA"
                          "@@._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Matthew Vaughn (dir.), Ralph Fiennes, Gemma Arterton",
                 "imDb_rating": "6.5",
@@ -192,7 +200,7 @@ class BigMovers(unittest.TestCase):
             }]
         model.run_sql_file('hebner_project1/schema.sql', 'tester.sqlite')
         for i in bad_data:
-            imDb_ID = i['id']
+            imdb_id = i['id']
             rank = i['rank']
             rank_up_down = i['rankUpDown']
             title = i['title']
@@ -200,11 +208,11 @@ class BigMovers(unittest.TestCase):
             year = i['year']
             image = i['image']
             crew = i['crew']
-            imDb_rating = i['imDb_rating']
-            imDb_rating_count = i['imDb_rating_count']
-            model.PopularMedia.add('tester.sqlite', 'popular_movies', imDb_ID, rank,
+            imdb_rating = i['imDb_rating']
+            imdb_rating_count = i['imDb_rating_count']
+            model.PopularMedia.add('tester.sqlite', 'popular_movies', imdb_id, rank,
                                    rank_up_down, title, full_title, year,
-                                   image, crew, imDb_rating, imDb_rating_count)
+                                   image, crew, imdb_rating, imdb_rating_count)
         up_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '+', 2)
         down_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '-', 2)
         # rankUpdown value should be positive for upMovers
@@ -263,15 +271,15 @@ class BigMovers(unittest.TestCase):
         up_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '+', '3')
         down_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '', '1')
         for i in up_movers:
-            imDb_ID = i[0]
+            imdb_id = i[0]
             rank = i[1]
             rank_up_down = i[2]
-            model.PopularMedia.add_big_movers('tester.sqlite', 'big_movers_movies', imDb_ID, rank, rank_up_down)
+            model.PopularMedia.add_big_movers('tester.sqlite', 'big_movers_movies', imdb_id, rank, rank_up_down)
         for i in down_movers:
-            imDb_ID = i[0]
+            imdb_id = i[0]
             rank = i[1]
             rank_up_down = i[2]
-            model.PopularMedia.add_big_movers('tester.sqlite', 'big_movers_movies', imDb_ID, rank, rank_up_down)
+            model.PopularMedia.add_big_movers('tester.sqlite', 'big_movers_movies', imdb_id, rank, rank_up_down)
         # If the foreign key works, query should return the 4 entries that are added above.
         # The title is included as an additional check because it only exists in popular_movies table.
         query = 'SELECT imdb_id, title FROM popular_movies JOIN big_movers_movies USING(imdb_id)'
