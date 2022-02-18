@@ -248,3 +248,32 @@ class BigMovers(unittest.TestCase):
             conn.commit()
         except AssertionError as msg:
             print(msg)
+
+    def test_foreign_key(self):
+        model.runSQLfile('schema.sql', 'tester.sqlite')
+        movieData = p1s1_hebner.getPopularMedia('movie')
+        tvData = p1s1_hebner.getPopularMedia('tv')
+        p1s1_hebner.loadPopularMedia('tester.sqlite', 'popular_movies', movieData)
+        p1s1_hebner.loadPopularMedia('tester.sqlite', 'popular_shows', tvData)
+        upMovers = model.PopularMedia.getBigMover('tester.sqlite', 'popular_movies', '+', '3')
+        downMovers = model.PopularMedia.getBigMover('tester.sqlite', 'popular_movies', '', '1')
+        for i in upMovers:
+            imDbId = i[0]
+            rank = i[1]
+            rankUpDown = i[2]
+            model.PopularMedia.addBigMovers('tester.sqlite', 'big_movers_movies', imDbId, rank, rankUpDown)
+        for i in downMovers:
+            imDbId = i[0]
+            rank = i[1]
+            rankUpDown = i[2]
+            model.PopularMedia.addBigMovers('tester.sqlite', 'big_movers_movies', imDbId, rank, rankUpDown)
+        # If the foreign key works, query should return the 4 entries that are added above.
+        # The title is included as an additional check because it only exists in popular_movies table.
+        query = 'SELECT imDbId, title FROM popular_movies JOIN big_movers_movies USING(imDbId)'
+        conn, cursor = model.open_db('tester.sqlite')
+        response = conn.execute(query)
+        response = response.fetchall()
+        try:
+            self.assertTrue(len(response) == 4, "Foreign Key Error")
+        except AssertionError as msg:
+            print(msg)
