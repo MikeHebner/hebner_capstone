@@ -2,26 +2,26 @@ import sqlite3
 from typing import Tuple
 
 
-def open_db(filename: str) -> Tuple[sqlite3.Connection, sqlite3.Cursor]:
-    db_connection = sqlite3.connect(filename)
+def open_db(file_name: str) -> Tuple[sqlite3.Connection, sqlite3.Cursor]:
+    db_connection = sqlite3.connect(file_name)
     cursor = db_connection.cursor()
     return db_connection, cursor
 
 
-def runSQLfile(fileName, dbName):
-    file = open(fileName, 'r')
-    sqlFile = file.read()
+def run_sql_file(file_name, db_name):
+    file = open(file_name, 'r')
+    sql_file = file.read()
     file.close()
-    conn, cursor = open_db(dbName)
-    cmds = sqlFile.split(';')
+    conn, cursor = open_db(db_name)
+    cmds = sql_file.split(';')
     for cmd in cmds:
         conn.execute(cmd)
 
 
 class TopTv:
 
-    def __init__(self, imDbId, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count):
-        self.imDbId = imDbId
+    def __init__(self, imDb_ID, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count):
+        self.imDb_ID = imDb_ID
         self.rank = rank
         self.title = title
         self.full_title = full_title
@@ -34,21 +34,21 @@ class TopTv:
         return "%s - %s (%s)" % (self.rank, self.title, self.year)
 
     @classmethod
-    def add(cls, dbName, imDbId, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count):
-        query = "INSERT INTO TopShows(imDbId, rank,  title, full_title, year, crew, imdb_rating, imdb_rating_count)" \
+    def add(cls, db_name, imDb_ID, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count):
+        query = "INSERT INTO TopShows(imDb_ID, rank,  title, full_title, year, crew, imdb_rating, imdb_rating_count)" \
                 " VALUES (?,?,?,?,?,?,?,?)"
-        conn, cursor = open_db(dbName)
-        conn.execute(query, (imDbId, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count))
+        conn, cursor = open_db(db_name)
+        conn.execute(query, (imDb_ID, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count))
         conn.commit()
 
     @classmethod
-    def delete(cls, dbName, imDbId):
-        q = "SELECT COUNT(imDbId) FROM TopShows WHERE imDbId=(?)"
-        conn, cursor = open_db(dbName)
-        response = conn.execute(q, (imDbId,))
+    def delete(cls, db_name, imDb_ID):
+        q = "SELECT COUNT(imDb_ID) FROM TopShows WHERE imDb_ID=(?)"
+        conn, cursor = open_db(db_name)
+        response = conn.execute(q, (imDb_ID,))
         if len(response.fetchall()) > 0:
-            q = "DELETE FROM TopShows WHERE imDbId=(?)"
-            conn.execute(q, (imDbId,))
+            q = "DELETE FROM TopShows WHERE imDb_ID=(?)"
+            conn.execute(q, (imDb_ID,))
 
             conn.commit()
             return 1
@@ -56,20 +56,20 @@ class TopTv:
             return 0
 
     @classmethod
-    def get(cls, dbName, imDbId):
-        q = "SELECT * FROM TopShows WHERE imDbId=(?)"
-        conn, cursor = open_db(dbName)
-        response = conn.execute(q, (imDbId,))
+    def get(cls, db_name, imDb_ID):
+        q = "SELECT * FROM TopShows WHERE imDb_ID=(?)"
+        conn, cursor = open_db(db_name)
+        response = conn.execute(q, (imDb_ID,))
         return response.fetchall()
 
 
 class UserRatings:
 
-    def __init__(self, imDbId, total_rating, total_rating_votes, rating_10, rating_10_votes, rating_9, rating_9_votes,
+    def __init__(self, imDb_ID, total_rating, total_rating_votes, rating_10, rating_10_votes, rating_9, rating_9_votes,
                  rating_8, rating_8_votes, rating_7, rating_7_votes, rating_6, rating_6_votes, rating_5, rating_5_votes,
                  rating_4, rating_4_votes, rating_3, rating_3_votes, rating_2, rating_2_votes, rating_1,
                  rating_1_votes):
-        self.imDbId = imDbId
+        self.imDb_ID = imDb_ID
         self.total_rating = total_rating
         self.total_rating_votes = total_rating_votes
         self.rating_10 = rating_10
@@ -94,32 +94,40 @@ class UserRatings:
         self.rating_1_votes = rating_1_votes
 
     @classmethod
-    def add(cls, dbName, imDbId, total_rating, total_rating_votes, rating_10, rating_10_votes, rating_9, rating_9_votes,
-            rating_8, rating_8_votes, rating_7, rating_7_votes, rating_6, rating_6_votes, rating_5, rating_5_votes,
-            rating_4, rating_4_votes, rating_3, rating_3_votes, rating_2, rating_2_votes, rating_1,
+    def add(cls, db_name, imDb_ID, total_rating, total_rating_votes,
+            rating_10, rating_10_votes, rating_9, rating_9_votes,
+            rating_8, rating_8_votes, rating_7, rating_7_votes,
+            rating_6, rating_6_votes, rating_5, rating_5_votes,
+            rating_4, rating_4_votes, rating_3, rating_3_votes,
+            rating_2, rating_2_votes, rating_1,
             rating_1_votes):
-        query = "INSERT INTO User_Ratings(imDbId, total_rating, total_rating_votes, rating_10, rating_10_votes," \
-                "rating_9, rating_9_votes,rating_8, rating_8_votes, rating_7, rating_7_votes, rating_6," \
-                " rating_6_votes, rating_5, rating_5_votes,rating_4, rating_4_votes, rating_3, rating_3_votes," \
+        query = "INSERT INTO User_Ratings(imDb_ID, total_rating," \
+                " total_rating_votes, rating_10, rating_10_votes," \
+                "rating_9, rating_9_votes,rating_8, rating_8_votes," \
+                " rating_7, rating_7_votes, rating_6," \
+                " rating_6_votes, rating_5, rating_5_votes,rating_4," \
+                " rating_4_votes, rating_3, rating_3_votes," \
                 " rating_2, rating_2_votes, rating_1,rating_1_votes)" \
                 " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        conn, cursor = open_db(dbName)
+        conn, cursor = open_db(db_name)
         conn.execute(query,
-                     (imDbId, total_rating, total_rating_votes, rating_10, rating_10_votes, rating_9, rating_9_votes,
-                      rating_8, rating_8_votes, rating_7, rating_7_votes, rating_6, rating_6_votes, rating_5,
-                      rating_5_votes,
-                      rating_4, rating_4_votes, rating_3, rating_3_votes, rating_2, rating_2_votes, rating_1,
+                     (imDb_ID, total_rating, total_rating_votes, rating_10,
+                      rating_10_votes, rating_9, rating_9_votes,
+                      rating_8, rating_8_votes, rating_7, rating_7_votes,
+                      rating_6, rating_6_votes, rating_5,
+                      rating_5_votes, rating_4, rating_4_votes, rating_3,
+                      rating_3_votes, rating_2, rating_2_votes, rating_1,
                       rating_1_votes))
         conn.commit()
 
     @classmethod
-    def delete(cls, dbName, imDbId):
-        q = "SELECT COUNT(imDbId) FROM User_Ratings WHERE imDbId=(?)"
-        conn, cursor = open_db(dbName)
-        response = conn.execute(q, (imDbId,))
+    def delete(cls, db_name, imDb_ID):
+        q = "SELECT COUNT(imDb_ID) FROM User_Ratings WHERE imDb_ID=(?)"
+        conn, cursor = open_db(db_name)
+        response = conn.execute(q, (imDb_ID,))
         if len(response.fetchall()) > 0:
-            q = "DELETE FROM User_Ratings WHERE imDbId=(?)"
-            conn.execute(q, (imDbId,))
+            q = "DELETE FROM User_Ratings WHERE imDb_ID=(?)"
+            conn.execute(q, (imDb_ID,))
             conn.commit()
             return 1
         else:
@@ -129,46 +137,46 @@ class UserRatings:
 # One class to cover  both TV shows and Movies
 class PopularMedia:
 
-    def __init__(self, imDbId, rank, rankUpDown, title, fullTitle, year, image, crew, imDbRating, imDbRatingCount):
-        self.imDbId = imDbId
+    def __init__(self, imDb_ID, rank, rank_up_down, title, full_title, year, image, crew, imDb_rating, imDb_rating_count):
+        self.imDb_ID = imDb_ID
         self.rank = rank
-        self.rankUpDown = rankUpDown
+        self.rank_up_down = rank_up_down
         self.title = title
-        self.fullTitle = fullTitle
+        self.full_title = full_title
         self.year = year
         self.image = image
         self.crew = crew
-        self.imDbRating = imDbRating
-        self.imDbRatingCount = imDbRatingCount
+        self.imDb_rating = imDb_rating
+        self.imDb_rating_count = imDb_rating_count
 
     @classmethod
-    def add(cls, dbName, tableName, imDbId, rank, rankUpDown, title, full_title, year, image, crew, imDbRating,
-            imDbRatingCount):
-        query = 'INSERT INTO {}(imDbId, rank, rankUpDown, title, full_title, year, image, crew,' \
-                ' imDbRating,imDbRatingCount) VALUES (?,?,?,?,?,?,?,?,?,?)'.format(tableName)
-        conn, cursor = open_db(dbName)
+    def add(cls, db_name, table_name, imDb_ID, rank, rank_up_down, title, full_title, year, image, crew, imDb_rating,
+            imDb_rating_count):
+        query = 'INSERT INTO {}(imDb_ID, rank, rank_up_down, title, full_title, year, image, crew,' \
+                ' imDb_rating,imDb_rating_count) VALUES (?,?,?,?,?,?,?,?,?,?)'.format(table_name)
+        conn, cursor = open_db(db_name)
         conn.execute(query,
-                     (imDbId, rank, rankUpDown, title, full_title, year, image, crew, imDbRating,
-                      imDbRatingCount))
+                     (imDb_ID, rank, rank_up_down, title, full_title, year, image, crew, imDb_rating,
+                      imDb_rating_count))
         conn.commit()
 
     # direction = '+' or '-'; + corresponds to positive change, - to negative change
     # amount = how many entries you want returned; 5 = 5 movies
-    # Returns the movie(s) with the largest rankUpDown change
+    # Returns the movie(s) with the largest rank_up_down change
     @classmethod
-    def getBigMover(cls, dbName, tableName, direction, amount):
+    def get_big_mover(cls, db_name, table_name, direction, amount):
         if direction == "+":
-            direction = ' rankUpDown DESC'
+            direction = ' rank_up_down DESC'
         else:
-            direction = 'rankUpDown'
-        query = 'SELECT * FROM {} ORDER BY {} LIMIT {}'.format(tableName, direction, amount)
-        conn, cursor = open_db(dbName)
+            direction = 'rank_up_down'
+        query = 'SELECT * FROM {} ORDER BY {} LIMIT {}'.format(table_name, direction, amount)
+        conn, cursor = open_db(db_name)
         response = conn.execute(query)
         return response.fetchall()
 
     @classmethod
-    def addBigMovers(cls, dbName, tableName, imDbId, rank, rankUpDown):
-        query = 'INSERT INTO {}(imDbId, rank, rankUpDown) VALUES (?,?,?)'.format(tableName)
-        conn, cursor = open_db(dbName)
-        conn.execute(query, (imDbId, rank, rankUpDown))
+    def add_big_movers(cls, db_name, table_name, imDb_ID, rank, rank_up_down):
+        query = 'INSERT INTO {}(imDb_ID, rank, rank_up_down) VALUES (?,?,?)'.format(table_name)
+        conn, cursor = open_db(db_name)
+        conn.execute(query, (imDb_ID, rank, rank_up_down))
         conn.commit()

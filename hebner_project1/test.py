@@ -5,7 +5,7 @@ import model
 
 class Test250(unittest.TestCase):
     def test(self):
-        self.assertTrue(p1s1_hebner.getTopTv(), 250)
+        self.assertTrue(p1s1_hebner.get_top_tv(), 250)
 
 
 class TestTwo(unittest.TestCase):
@@ -22,11 +22,12 @@ class TestTwo(unittest.TestCase):
                     "fullTitle": "Bluey",
                     "year": "2022",
                     "image": "https://m.media-amazon.com/images/M"
-                             "/MV5BZWYxODViMGYtMGE2ZC00ZGQ3LThhMWUtYTVkNGE3OWU4NWRkL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyMjY"
+                             "/MV5BZWYxODViMGYtMGE2ZC00ZGQ3LThhMW"
+                             "UtYTVkNGE3OWU4NWRkL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyMjY"
                              "wNDA2MDE@._V1_UX128_CR0,3,128,176_AL_.jpg",
                     "crew": "David Attenborough, Gordon Ramsey",
-                    "imDbRating": "10",
-                    "imDbRatingCount": "690105"
+                    "imDb_rating": "10",
+                    "imDb_rating_count": "690105"
                 },
         }
         id = testShow['items']['id']
@@ -35,10 +36,11 @@ class TestTwo(unittest.TestCase):
         full_title = testShow['items']['fullTitle']
         year = testShow['items']['year']
         crew = testShow['items']['crew']
-        imdb_rating = testShow['items']['imDbRating']
-        imdb_rating_count = testShow['items']['imDbRatingCount']
-        model.runSQLfile('hebner_project1/schema.sql', 'tester.sqlite')
-        model.TopTv.add('tester.sqlite', id, rank, title, full_title, year, crew, imdb_rating, imdb_rating_count)
+        imdb_rating = testShow['items']['imDb_rating']
+        imdb_rating_count = testShow['items']['imDb_rating_count']
+        model.run_sql_file('hebner_project1/schema.sql', 'tester.sqlite')
+        model.TopTv.add('tester.sqlite', id, rank, title, full_title, year, crew,
+                        imdb_rating, imdb_rating_count)
         check = model.TopTv.get('tester.sqlite', id)
         try:
             self.assertTrue(len(check), 1)
@@ -49,7 +51,7 @@ class TestTwo(unittest.TestCase):
 class BigMovers(unittest.TestCase):
 
     def test_movers_happy(self):
-        happyData = [{
+        happy_data = [{
             "id": "tt7740496",
             "rank": "1",
             "rankUpDown": "-500",
@@ -60,8 +62,8 @@ class BigMovers(unittest.TestCase):
                      "/MV5BOTI4NDhhNGEtZjQxZC00ZTRmLThmZTctOGJmY2ZlOTc0ZGY0XkEyXkFqcGdeQXVyMTkxNjUyNQ"
                      "@@._V1_UX128_CR0,3,128,176_AL_.jpg",
             "crew": "Guillermo del Toro (dir.), Bradley Cooper, Cate Blanchett",
-            "imDbRating": "7.2",
-            "imDbRatingCount": "52151"
+            "imDb_rating": "7.2",
+            "imDb_rating_count": "52151"
         },
             {
                 "id": "tt10293406",
@@ -74,8 +76,8 @@ class BigMovers(unittest.TestCase):
                          "/MV5BZGRhYjE2NWUtN2FkNy00NGI3LTkxYWMtMDk4Yjg5ZjI3MWI2XkEyXkFqcGdeQXVyMTEyMjM2NDc2"
                          "._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Jane Campion (dir.), Benedict Cumberbatch, Kirsten Dunst",
-                "imDbRating": "6.9",
-                "imDbRatingCount": "105912"
+                "imDb_rating": "6.9",
+                "imDb_rating_count": "105912"
             },
             {
                 "id": "tt7657566",
@@ -88,8 +90,8 @@ class BigMovers(unittest.TestCase):
                          "/MV5BNjI4ZTQ1OTYtNTI0Yi00M2EyLThiNjMtMzk1MmZlOWMyMDQwXkEyXkFqcGdeQXVyMTEyMjM2NDc2"
                          "._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Kenneth Branagh (dir.), Tom Bateman, Annette Bening",
-                "imDbRating": "6.7",
-                "imDbRatingCount": "9656"
+                "imDb_rating": "6.7",
+                "imDb_rating_count": "9656"
             },
             {
                 "id": "tt6856242",
@@ -102,36 +104,37 @@ class BigMovers(unittest.TestCase):
                          "/MV5BMDEzZDY2ZDktNTlmOS00NThjLThkNTEtMjE5MzI5NWEwZmRjXkEyXkFqcGdeQXVyMDA4NzMyOA"
                          "@@._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Matthew Vaughn (dir.), Ralph Fiennes, Gemma Arterton",
-                "imDbRating": "6.5",
-                "imDbRatingCount": "45661"
+                "imDb_rating": "6.5",
+                "imDb_rating_count": "45661"
             }]
-        model.runSQLfile('hebner_project1/schema.sql', 'tester.sqlite')
-        for i in happyData:
-            imDbId = i['id']
+        model.run_sql_file('hebner_project1/schema.sql', 'tester.sqlite')
+        for i in happy_data:
+            imDb_ID = i['id']
             rank = i['rank']
-            rankUpDown = i['rankUpDown']
+            rank_up_down = i['rankUpDown']
             title = i['title']
             full_title = i['fullTitle']
             year = i['year']
             image = i['image']
             crew = i['crew']
-            imDbRating = i['imDbRating']
-            imDbRatingCount = i['imDbRatingCount']
-            model.PopularMedia.add('tester.sqlite', 'popular_movies', imDbId, rank, rankUpDown, title, full_title, year,
-                                   image, crew, imDbRating, imDbRatingCount)
-        upMovers = model.PopularMedia.getBigMover('tester.sqlite', 'popular_movies', '+', 2)
-        downMovers = model.PopularMedia.getBigMover('tester.sqlite', 'popular_movies', '-', 2)
+            imDb_rating = i['imDb_rating']
+            imDb_rating_count = i['imDb_rating_count']
+            model.PopularMedia.add('tester.sqlite', 'popular_movies', imDb_ID, rank,
+                                   rank_up_down, title, full_title, year,
+                                   image, crew, imDb_rating, imDb_rating_count)
+        up_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '+', 2)
+        down_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '-', 2)
         # rankUpdown value should be positive for upMovers
         # and negative for downMovers
-        for i in upMovers:
+        for i in up_movers:
             self.assertIs(type(i[2]), int, "Incorrect Type")
             self.assertGreaterEqual(i[2], 0, "Value < 0")
-        for i in downMovers:
+        for i in down_movers:
             self.assertIs(type(i[2]), int, "Incorrect Type")
             self.assertLessEqual(i[2], 0, "Value > 0")
 
     def test_movers_bad(self):
-        badData = [{
+        bad_data = [{
             "id": "tt7740123",
             "rank": "1",
             "rankUpDown": "-Egg",
@@ -142,8 +145,8 @@ class BigMovers(unittest.TestCase):
                      "/MV5BOTI4NDhhNGEtZjQxZC00ZTRmLThmZTctOGJmY2ZlOTc0ZGY0XkEyXkFqcGdeQXVyMTkxNjUyNQ"
                      "@@._V1_UX128_CR0,3,128,176_AL_.jpg",
             "crew": "Guillermo del Toro (dir.), Bradley Cooper, Cate Blanchett",
-            "imDbRating": "7.2",
-            "imDbRatingCount": "52151"
+            "imDb_rating": "7.2",
+            "imDb_rating_count": "52151"
         },
             {
                 "id": "tt10293234",
@@ -156,8 +159,8 @@ class BigMovers(unittest.TestCase):
                          "/MV5BZGRhYjE2NWUtN2FkNy00NGI3LTkxYWMtMDk4Yjg5ZjI3MWI2XkEyXkFqcGdeQXVyMTEyMjM2NDc2"
                          "._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Jane Campion (dir.), Benedict Cumberbatch, Kirsten Dunst",
-                "imDbRating": "6.9",
-                "imDbRatingCount": "105912"
+                "imDb_rating": "6.9",
+                "imDb_rating_count": "105912"
             },
             {
                 "id": "tt7657345",
@@ -170,8 +173,8 @@ class BigMovers(unittest.TestCase):
                          "/MV5BNjI4ZTQ1OTYtNTI0Yi00M2EyLThiNjMtMzk1MmZlOWMyMDQwXkEyXkFqcGdeQXVyMTEyMjM2NDc2"
                          "._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Kenneth Branagh (dir.), Tom Bateman, Annette Bening",
-                "imDbRating": "6.7",
-                "imDbRatingCount": "9656"
+                "imDb_rating": "6.7",
+                "imDb_rating_count": "9656"
             },
             {
                 "id": "tt6856456",
@@ -184,32 +187,33 @@ class BigMovers(unittest.TestCase):
                          "/MV5BMDEzZDY2ZDktNTlmOS00NThjLThkNTEtMjE5MzI5NWEwZmRjXkEyXkFqcGdeQXVyMDA4NzMyOA"
                          "@@._V1_UX128_CR0,3,128,176_AL_.jpg",
                 "crew": "Matthew Vaughn (dir.), Ralph Fiennes, Gemma Arterton",
-                "imDbRating": "6.5",
-                "imDbRatingCount": "45661"
+                "imDb_rating": "6.5",
+                "imDb_rating_count": "45661"
             }]
-        model.runSQLfile('hebner_project1/schema.sql', 'tester.sqlite')
-        for i in badData:
-            imDbId = i['id']
+        model.run_sql_file('hebner_project1/schema.sql', 'tester.sqlite')
+        for i in bad_data:
+            imDb_ID = i['id']
             rank = i['rank']
-            rankUpDown = i['rankUpDown']
+            rank_up_down = i['rankUpDown']
             title = i['title']
             full_title = i['fullTitle']
             year = i['year']
             image = i['image']
             crew = i['crew']
-            imDbRating = i['imDbRating']
-            imDbRatingCount = i['imDbRatingCount']
-            model.PopularMedia.add('tester.sqlite', 'popular_movies', imDbId, rank, rankUpDown, title, full_title, year,
-                                   image, crew, imDbRating, imDbRatingCount)
-        upMovers = model.PopularMedia.getBigMover('tester.sqlite', 'popular_movies', '+', 2)
-        downMovers = model.PopularMedia.getBigMover('tester.sqlite', 'popular_movies', '-', 2)
+            imDb_rating = i['imDb_rating']
+            imDb_rating_count = i['imDb_rating_count']
+            model.PopularMedia.add('tester.sqlite', 'popular_movies', imDb_ID, rank,
+                                   rank_up_down, title, full_title, year,
+                                   image, crew, imDb_rating, imDb_rating_count)
+        up_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '+', 2)
+        down_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '-', 2)
         # rankUpdown value should be positive for upMovers
         # and negative for downMovers.
         try:
-            for i in upMovers:
+            for i in up_movers:
                 self.assertIs(type(i[2]), int, "Incorrect Type")
                 self.assertGreaterEqual(i[2], 0, "Value < 0")
-            for i in downMovers:
+            for i in down_movers:
                 self.assertIs(type(i[2]), int, "Incorrect Type")
                 self.assertLessEqual(i[2], 0, "Value > 0")
         except AssertionError as msg:
@@ -218,25 +222,26 @@ class BigMovers(unittest.TestCase):
     # Matches the returned tables to correctTables[]
     # After iterating through, int counter should equal the len(correctTables[])
     def test_table_exist(self):
-        correctTables = ['TopShows', 'User_Ratings', 'popular_shows', 'popular_movies', 'big_movers_movies']
+        correct_tables = ['TopShows', 'User_Ratings', 'popular_shows', 'popular_movies',
+                         'big_movers_movies']
         counter = 0
         query = 'SELECT tbl_name FROM main.sqlite_master WHERE type==(?)'
         conn, cursor = model.open_db('tester.sqlite')
         response = conn.execute(query, ('table',))
         response = response.fetchall()
         for x in range(len(response)):
-            for y in range(len(correctTables)):
-                if response[x][0] == correctTables[y]:
+            for y in range(len(correct_tables)):
+                if response[x][0] == correct_tables[y]:
                     counter += 1
         try:
-            self.assertEqual(counter, len(correctTables), "Missing Tables")
+            self.assertEqual(counter, len(correct_tables), "Missing Tables")
         except AssertionError as msg:
             print(msg)
 
     # Adds a test entry into the (empty) table and checks if it's there.
     # If it is, it clears the table.
     def test_write_table(self):
-        model.PopularMedia.addBigMovers('tester.sqlite', 'big_movers_movies', 'testID', 1, +1)
+        model.PopularMedia.add_big_movers('tester.sqlite', 'big_movers_movies', 'testID', 1, +1)
         query = "SELECT * FROM main.big_movers_movies"
         conn, cursor = model.open_db('tester.sqlite')
         response = conn.execute(query)
@@ -250,26 +255,26 @@ class BigMovers(unittest.TestCase):
             print(msg)
 
     def test_foreign_key(self):
-        model.runSQLfile('hebner_project1/schema.sql', 'tester.sqlite')
-        movieData = p1s1_hebner.getPopularMedia('movie')
-        tvData = p1s1_hebner.getPopularMedia('tv')
-        p1s1_hebner.loadPopularMedia('tester.sqlite', 'popular_movies', movieData)
-        p1s1_hebner.loadPopularMedia('tester.sqlite', 'popular_shows', tvData)
-        upMovers = model.PopularMedia.getBigMover('tester.sqlite', 'popular_movies', '+', '3')
-        downMovers = model.PopularMedia.getBigMover('tester.sqlite', 'popular_movies', '', '1')
-        for i in upMovers:
-            imDbId = i[0]
+        model.run_sql_file('hebner_project1/schema.sql', 'tester.sqlite')
+        movie_data = p1s1_hebner.get_popular_media('movie')
+        tv_data = p1s1_hebner.get_popular_media('tv')
+        p1s1_hebner.load_popular_media('tester.sqlite', 'popular_movies', movie_data)
+        p1s1_hebner.load_popular_media('tester.sqlite', 'popular_shows', tv_data)
+        up_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '+', '3')
+        down_movers = model.PopularMedia.get_big_mover('tester.sqlite', 'popular_movies', '', '1')
+        for i in up_movers:
+            imDb_ID = i[0]
             rank = i[1]
-            rankUpDown = i[2]
-            model.PopularMedia.addBigMovers('tester.sqlite', 'big_movers_movies', imDbId, rank, rankUpDown)
-        for i in downMovers:
-            imDbId = i[0]
+            rank_up_down = i[2]
+            model.PopularMedia.add_big_movers('tester.sqlite', 'big_movers_movies', imDb_ID, rank, rank_up_down)
+        for i in down_movers:
+            imDb_ID = i[0]
             rank = i[1]
-            rankUpDown = i[2]
-            model.PopularMedia.addBigMovers('tester.sqlite', 'big_movers_movies', imDbId, rank, rankUpDown)
+            rank_up_down = i[2]
+            model.PopularMedia.add_big_movers('tester.sqlite', 'big_movers_movies', imDb_ID, rank, rank_up_down)
         # If the foreign key works, query should return the 4 entries that are added above.
         # The title is included as an additional check because it only exists in popular_movies table.
-        query = 'SELECT imDbId, title FROM popular_movies JOIN big_movers_movies USING(imDbId)'
+        query = 'SELECT imDb_ID, title FROM popular_movies JOIN big_movers_movies USING(imDb_ID)'
         conn, cursor = model.open_db('tester.sqlite')
         response = conn.execute(query)
         response = response.fetchall()
