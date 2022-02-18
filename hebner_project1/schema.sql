@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS TopShows;
 CREATE TABLE TopShows
 (
-  imDb_ID INT NOT NULL,
+  imdb_id INT NOT NULL,
   rank INT NOT NULL,
   title VARCHAR NOT NULL,
   full_title VARCHAR NOT NULL,
@@ -9,13 +9,13 @@ CREATE TABLE TopShows
   crew VARCHAR NOT NULL,
   imdb_rating VARCHAR NOT NULL,
   imdb_rating_count INT NOT NULL,
-  PRIMARY KEY (imDb_ID)
+  PRIMARY KEY (imdb_id)
 );
 
 DROP TABLE IF EXISTS User_Ratings;
 CREATE TABLE User_Ratings
 (
-  imDb_ID VARCHAR NOT NULL,
+  imdb_id VARCHAR NOT NULL,
   total_rating INT NOT NULL,
   total_rating_votes INT NOT NULL,
   rating_10 INT NOT NULL,
@@ -38,13 +38,13 @@ CREATE TABLE User_Ratings
   rating_2_votes INT NOT NULL,
   rating_1 INT NOT NULL,
   rating_1_votes INT NOT NULL,
-  FOREIGN KEY (imDb_ID) REFERENCES TopShows(imDb_ID)
+  FOREIGN KEY (imdb_id) REFERENCES TopShows(imdb_id)
 );
 
 DROP TABLE IF EXISTS popular_shows;
 CREATE TABLE popular_shows
 (
-    imDb_ID VARCHAR NOT NULL,
+    imdb_id VARCHAR NOT NULL,
     rank INT NOT NULL,
     rank_up_down INT NOT NULL,
     title INT NOT NULL,
@@ -52,15 +52,15 @@ CREATE TABLE popular_shows
     year INT NOT NULL,
     image VARCHAR NOT NULL,
     crew VARCHAR NOT NULL,
-    imDb_rating VARCHAR NOT NULL,
-    imDb_rating_count VARCHAR NOT NULL,
-    PRIMARY KEY (imDb_ID)
+    imdb_rating VARCHAR NOT NULL,
+    imdb_rating_count VARCHAR NOT NULL,
+    PRIMARY KEY (imdb_id)
 );
 
 DROP TABLE IF EXISTS popular_movies;
 CREATE TABLE popular_movies
 (
-    imDb_ID VARCHAR NOT NULL,
+    imdb_id VARCHAR NOT NULL,
     rank INT NOT NULL,
     rank_up_down INT NOT NULL,
     title VARCHAR NOT NULL,
@@ -68,17 +68,17 @@ CREATE TABLE popular_movies
     year INT NOT NULL,
     image VARCHAR NOT NULL,
     crew VARCHAR NOT NULL,
-    imDb_rating VARCHAR NOT NULL,
-    imDb_rating_count VARCHAR NOT NULL,
-    PRIMARY KEY (imDb_ID)
+    imdb_rating VARCHAR NOT NULL,
+    imdb_rating_count VARCHAR NOT NULL,
+    PRIMARY KEY (imdb_id)
 );
 
 DROP TABLE IF EXISTS big_movers_movies;
 CREATE TABLE big_movers_movies
 (
-    imDb_ID VARCHAR NOT NULL,
+    imdb_id VARCHAR NOT NULL,
     rank INT NOT NULL,
     rank_up_down INT NOT NULL,
-    PRIMARY KEY (imDb_ID),
-    FOREIGN KEY (imDb_ID) REFERENCES popular_movies(imDb_ID)
+    PRIMARY KEY (imdb_id),
+    FOREIGN KEY (imdb_id) REFERENCES popular_movies(imdb_id)
 )

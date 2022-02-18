@@ -274,7 +274,7 @@ class BigMovers(unittest.TestCase):
             model.PopularMedia.add_big_movers('tester.sqlite', 'big_movers_movies', imDb_ID, rank, rank_up_down)
         # If the foreign key works, query should return the 4 entries that are added above.
         # The title is included as an additional check because it only exists in popular_movies table.
-        query = 'SELECT imDb_ID, title FROM popular_movies JOIN big_movers_movies USING(imDb_ID)'
+        query = 'SELECT imdb_id, title FROM popular_movies JOIN big_movers_movies USING(imdb_id)'
         conn, cursor = model.open_db('tester.sqlite')
         response = conn.execute(query)
         response = response.fetchall()
