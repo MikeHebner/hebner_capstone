@@ -215,6 +215,8 @@ class BigMovers(unittest.TestCase):
         except AssertionError as msg:
             print(msg)
 
+    # Matches the returned tables to correctTables[]
+    # After iterating through, int counter should equal the len(correctTables[])
     def test_table_exist(self):
         correctTables = ['TopShows', 'User_Ratings', 'popular_shows', 'popular_movies', 'big_movers_movies']
         counter = 0
@@ -228,5 +230,21 @@ class BigMovers(unittest.TestCase):
                     counter += 1
         try:
             self.assertEqual(counter, len(correctTables), "Missing Tables")
+        except AssertionError as msg:
+            print(msg)
+
+    # Adds a test entry into the (empty) table and checks if it's there.
+    # If it is, it clears the table.
+    def test_write_table(self):
+        model.PopularMedia.addBigMovers('tester.sqlite', 'big_movers_movies', 'testID', 1, +1)
+        query = "SELECT * FROM main.big_movers_movies"
+        conn, cursor = model.open_db('tester.sqlite')
+        response = conn.execute(query)
+        response = response.fetchall()
+        try:
+            self.assertIs(len(response), 1, "Table not added")
+            query = "DELETE FROM main.big_movers_movies"
+            conn.execute(query)
+            conn.commit()
         except AssertionError as msg:
             print(msg)
