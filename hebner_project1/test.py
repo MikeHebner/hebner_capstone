@@ -250,7 +250,7 @@ class BigMovers(unittest.TestCase):
             print(msg)
 
     def test_foreign_key(self):
-        model.runSQLfile('schema.sql', 'tester.sqlite')
+        model.runSQLfile('hebner_project1/schema.sql', 'tester.sqlite')
         movieData = p1s1_hebner.getPopularMedia('movie')
         tvData = p1s1_hebner.getPopularMedia('tv')
         p1s1_hebner.loadPopularMedia('tester.sqlite', 'popular_movies', movieData)
