@@ -295,3 +295,21 @@ class BigMovers(unittest.TestCase):
             self.assertTrue(len(response) == 4, "Foreign Key Error")
         except AssertionError as msg:
             print(msg)
+
+    def test_movie_foreign_key(self):
+        correct_key = 'FOREIGN KEY (imdb_id) REFERENCES popular_movies(imdb_id)'
+        model.run_sql_file('hebner_project1/schema.sql', 'tester.sqlite')
+        query = 'SELECT sql FROM main.sqlite_master WHERE tbl_name==(?) AND type==(?)'
+        conn, cursor = model.open_db('tester.sqlite')
+        response = conn.execute(query, ('movie_user_ratings', 'table'))
+        response = response.fetchall()
+        response = response[0]
+        response = str(response)
+        try:
+            # str.find() returns index of substring if found.
+            # Otherwise, returns -1.
+            check = response.find(correct_key, 0, len(response))
+            self.assertGreaterEqual(check, 0, 'KEY CONSTRAINT NOT FOUND')
+        except AssertionError as msg:
+            print(msg)
+
