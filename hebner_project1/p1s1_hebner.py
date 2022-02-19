@@ -52,11 +52,11 @@ def put_top_tv():
         file.write(line)
 
 
-# Function takes one id (IMDB id)
+# Function takes one imdb_id (IMDB imdb_id)
 # Formats the returned rating into a readable format
 # Appends it to the main text file
-def get_user_rating_data(id):
-    url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.API_KEY, id)
+def get_user_rating_data(imdb_id):
+    url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.API_KEY, imdb_id)
     response = requests.get(url)
     data = response.json()
     title = data['title']
@@ -72,8 +72,8 @@ def get_user_rating_data(id):
 
 # I will delete above function once grading for sprint 1 is complete.
 # This function is doing the same, just for database instead of txt file.
-def get_user_rating_data_v2(id):
-    url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.API_KEY, id)
+def get_user_rating_data_v2(imdb_id):
+    url = "https://imdb-api.com/en/API/UserRatings/{}/{}".format(secrets.API_KEY, imdb_id)
     response = requests.get(url)
     data = response.json()
     imdb_id = data['imDbId']
@@ -102,9 +102,9 @@ def get_user_rating_data_v2(id):
     return imdb_id, total_rating, total_rating_votes, rating_percents, rating_votes
 
 
-# Returns imdb id from rank off of top 250 shows or by name
+# Returns imdb imdb_id from rank off of top 250 shows or by name
 def get_id(not_id):
-    # get id from ranking
+    # get imdb_id from ranking
     if type(not_id) is int:
         rank = not_id
         # index of each is its rank minus one.
@@ -113,8 +113,8 @@ def get_id(not_id):
         top_tv = open('topTv.json')
         top_tv = json.loads(top_tv.read())
         return top_tv['items'][index]['id']
-    # get id from (str) name
-    if type(not_id) is str:
+    # get imdb_id from (str) name
+    elif type(not_id) is str:
         name = not_id
         url = "https://imdb-api.com/en/API/SearchSeries/{}/{}".format(secrets.API_KEY, name)
         response = requests.get(url)
@@ -160,11 +160,11 @@ def load_top_movie():
 
 # Takes the imdbID as input.
 # Loads the User rating for given input into database.
-# type = movie or tv
-def load_user_ratings(id, type):
+# media_type = movie or tv
+def load_user_ratings(imdb_id, media_type):
     imdb_id, total_rating, total_rating_votes, rating_percents, rating_votes \
-        = get_user_rating_data_v2(id)
-    if type == 'movie':
+        = get_user_rating_data_v2(imdb_id)
+    if media_type == 'movie':
         model.UserRatings.add('imdb.sqlite', imdb_id, 'movie_user_ratings', total_rating,
                               total_rating_votes, rating_percents[0], rating_votes[0],
                               rating_percents[1], rating_votes[1], rating_percents[2],
@@ -174,7 +174,7 @@ def load_user_ratings(id, type):
                               rating_percents[7], rating_votes[7], rating_percents[8],
                               rating_votes[8], rating_percents[9], rating_votes[9])
 
-    elif type == 'tv':
+    elif media_type == 'tv':
         model.UserRatings.add('imdb.sqlite', imdb_id, 'tv_user_ratings', total_rating,
                               total_rating_votes, rating_percents[0], rating_votes[0],
                               rating_percents[1], rating_votes[1], rating_percents[2],
@@ -193,7 +193,7 @@ def get_popular_media(media_type):
         query = 'https://imdb-api.com/en/API/MostPopularMovies/{}'.format(secrets.API_KEY)
         response = requests.get(query)
         return response.json()
-    if media_type == 'tv':
+    elif media_type == 'tv':
         query = 'https://imdb-api.com/en/API/MostPopularTVs/{}'.format(secrets.API_KEY)
         response = requests.get(query)
         return response.json()

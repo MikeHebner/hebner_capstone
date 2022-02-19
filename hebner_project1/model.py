@@ -56,8 +56,6 @@ class TopTv:
 
             conn.commit()
             return 1
-        else:
-            return 0
 
     @classmethod
     def get(cls, db_name, imdb_id):
