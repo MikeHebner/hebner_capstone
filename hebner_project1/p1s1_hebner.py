@@ -23,6 +23,20 @@ def get_top_tv():
     return len(data)
 
 
+# Gets the top 250 Movies and saves the json response to the project directory
+# I did this to cut down on the api request
+def get_top_movies():
+    url = 'https://imdb-api.com/en/API/Top250Moviess/{}'.format(secrets.API_KEY, )
+    response = requests.get(url)
+    data = response.json()
+    with open('topMovies.json', 'w') as file:
+        # Erase contents and dump updated list
+        file.truncate(0)
+        json.dump(data, file)
+    # Only returns len(data) for test.py purposes
+    return len(data)
+
+
 # opens the main text file and appends the list of top 250 shows to it
 def put_top_tv():
     file = open("topTv.json")
@@ -127,19 +141,50 @@ def load_top_tv():
                         crew, imdb_rating, imdb_rating_count)
 
 
+def load_top_movie():
+    file = open("topMovies.json")
+    data = json.loads(file.read())
+    file.close()
+    for i in data['items']:
+        imdb_id = i['id']
+        rank = i['rank']
+        title = i['title']
+        full_title = i['fullTitle']
+        year = i['year']
+        crew = i['crew']
+        imdb_rating = i['imDbRating']
+        imdb_rating_count = i['imDbRatingCount']
+        model.TopMovie.add('imdb.sqlite', imdb_id, rank, title, full_title, year,
+                           crew, imdb_rating, imdb_rating_count)
+
+
 # Takes the imdbID as input.
 # Loads the User rating for given input into database.
-def load_user_ratings(id):
-    imdb_id, total_rating, total_rating_votes, rating_percents, rating_votes\
+# type = movie or tv
+def load_user_ratings(id, type):
+    imdb_id, total_rating, total_rating_votes, rating_percents, rating_votes \
         = get_user_rating_data_v2(id)
-    model.UserRatings.add('imdb.sqlite', imdb_id, total_rating,
-                          total_rating_votes, rating_percents[0], rating_votes[0],
-                          rating_percents[1], rating_votes[1], rating_percents[2],
-                          rating_votes[2], rating_percents[3], rating_votes[3],
-                          rating_percents[4], rating_votes[4], rating_percents[5],
-                          rating_votes[5], rating_percents[6], rating_votes[6],
-                          rating_percents[7], rating_votes[7], rating_percents[8],
-                          rating_votes[8], rating_percents[9], rating_votes[9])
+    if type == 'movie':
+        model.UserRatings.add('imdb.sqlite', imdb_id, 'movie_user_ratings', total_rating,
+                              total_rating_votes, rating_percents[0], rating_votes[0],
+                              rating_percents[1], rating_votes[1], rating_percents[2],
+                              rating_votes[2], rating_percents[3], rating_votes[3],
+                              rating_percents[4], rating_votes[4], rating_percents[5],
+                              rating_votes[5], rating_percents[6], rating_votes[6],
+                              rating_percents[7], rating_votes[7], rating_percents[8],
+                              rating_votes[8], rating_percents[9], rating_votes[9])
+
+    elif type == 'tv':
+        model.UserRatings.add('imdb.sqlite', imdb_id, 'tv_user_ratings', total_rating,
+                              total_rating_votes, rating_percents[0], rating_votes[0],
+                              rating_percents[1], rating_votes[1], rating_percents[2],
+                              rating_votes[2], rating_percents[3], rating_votes[3],
+                              rating_percents[4], rating_votes[4], rating_percents[5],
+                              rating_votes[5], rating_percents[6], rating_votes[6],
+                              rating_percents[7], rating_votes[7], rating_percents[8],
+                              rating_votes[8], rating_percents[9], rating_votes[9])
+    else:
+        return "INVALID INPUT"
 
 
 # input = tv or movie
@@ -181,7 +226,7 @@ def main():
     load_top_tv()
     for i in raw_input:
         imdb_id = get_id(i)
-        load_user_ratings(imdb_id)
+        load_user_ratings(imdb_id, 'tv')
     movie_data = get_popular_media('movie')
     tv_data = get_popular_media('tv')
     load_popular_media('imdb.sqlite', 'popular_movies', movie_data)

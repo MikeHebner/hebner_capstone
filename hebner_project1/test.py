@@ -230,7 +230,8 @@ class BigMovers(unittest.TestCase):
     # Matches the returned tables to correctTables[]
     # After iterating through, int counter should equal the len(correctTables[])
     def test_table_exist(self):
-        correct_tables = ['TopShows', 'User_Ratings', 'popular_shows', 'popular_movies',
+        correct_tables = ['top_shows', 'top_movies', 'tv_user_ratings',
+                          'movie_user_ratings', 'popular_shows', 'popular_movies',
                           'big_movers_movies']
         counter = 0
         query = 'SELECT tbl_name FROM main.sqlite_master WHERE type==(?)'

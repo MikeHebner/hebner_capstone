@@ -37,7 +37,7 @@ class TopTv:
     @classmethod
     def add(cls, db_name, imdb_id, rank, title, full_title, year,
             crew, imdb_rating, imdb_rating_count):
-        query = "INSERT INTO TopShows(imdb_id, rank,  title," \
+        query = "INSERT INTO top_shows(imdb_id, rank,  title," \
                 " full_title, year, crew, imdb_rating, imdb_rating_count)" \
                 " VALUES (?,?,?,?,?,?,?,?)"
         conn, cursor = open_db(db_name)
@@ -47,11 +47,11 @@ class TopTv:
 
     @classmethod
     def delete(cls, db_name, imdb_id):
-        q = "SELECT COUNT(imdb_id) FROM TopShows WHERE imdb_id=(?)"
+        q = "SELECT COUNT(imdb_id) FROM top_shows WHERE imdb_id=(?)"
         conn, cursor = open_db(db_name)
         response = conn.execute(q, (imdb_id,))
         if len(response.fetchall()) > 0:
-            q = "DELETE FROM TopShows WHERE imdb_id=(?)"
+            q = "DELETE FROM top_shows WHERE imdb_id=(?)"
             conn.execute(q, (imdb_id,))
 
             conn.commit()
@@ -61,7 +61,56 @@ class TopTv:
 
     @classmethod
     def get(cls, db_name, imdb_id):
-        q = "SELECT * FROM TopShows WHERE imdb_id=(?)"
+        q = "SELECT * FROM top_shows WHERE imdb_id=(?)"
+        conn, cursor = open_db(db_name)
+        response = conn.execute(q, (imdb_id,))
+        return response.fetchall()
+
+
+class TopMovie:
+
+    def __init__(self, imdb_id, rank, title, full_title, year,
+                 crew, imdb_rating, imdb_rating_count):
+        self.imdb_id = imdb_id
+        self.rank = rank
+        self.title = title
+        self.full_title = full_title
+        self.year = year
+        self.crew = crew
+        self.imdb_rating = imdb_rating
+        self.imdb_rating_count = imdb_rating_count
+
+    def __str__(self):
+        return "%s - %s (%s)" % (self.rank, self.title, self.year)
+
+    @classmethod
+    def add(cls, db_name, imdb_id, rank, title, full_title, year,
+            crew, imdb_rating, imdb_rating_count):
+        query = "INSERT INTO top_movies(imdb_id, rank,  title," \
+                " full_title, year, crew, imdb_rating, imdb_rating_count)" \
+                " VALUES (?,?,?,?,?,?,?,?)"
+        conn, cursor = open_db(db_name)
+        conn.execute(query, (imdb_id, rank, title, full_title, year,
+                             crew, imdb_rating, imdb_rating_count))
+        conn.commit()
+
+    @classmethod
+    def delete(cls, db_name, imdb_id):
+        q = "SELECT COUNT(imdb_id) FROM top_movies WHERE imdb_id=(?)"
+        conn, cursor = open_db(db_name)
+        response = conn.execute(q, (imdb_id,))
+        if len(response.fetchall()) > 0:
+            q = "DELETE FROM top_movies WHERE imdb_id=(?)"
+            conn.execute(q, (imdb_id,))
+
+            conn.commit()
+            return 1
+        else:
+            return 0
+
+    @classmethod
+    def get(cls, db_name, imdb_id):
+        q = "SELECT * FROM top_movies WHERE imdb_id=(?)"
         conn, cursor = open_db(db_name)
         response = conn.execute(q, (imdb_id,))
         return response.fetchall()
@@ -100,21 +149,22 @@ class UserRatings:
         self.rating_1_votes = rating_1_votes
 
     @classmethod
-    def add(cls, db_name, imdb_id, total_rating, total_rating_votes,
+    def add(cls, db_name, imdb_id, table_name, total_rating, total_rating_votes,
             rating_10, rating_10_votes, rating_9, rating_9_votes,
             rating_8, rating_8_votes, rating_7, rating_7_votes,
             rating_6, rating_6_votes, rating_5, rating_5_votes,
             rating_4, rating_4_votes, rating_3, rating_3_votes,
             rating_2, rating_2_votes, rating_1,
             rating_1_votes):
-        query = "INSERT INTO User_Ratings(imdb_id, total_rating," \
+        query = "INSERT INTO {}(imdb_id, total_rating," \
                 " total_rating_votes, rating_10, rating_10_votes," \
                 "rating_9, rating_9_votes,rating_8, rating_8_votes," \
                 " rating_7, rating_7_votes, rating_6," \
                 " rating_6_votes, rating_5, rating_5_votes,rating_4," \
                 " rating_4_votes, rating_3, rating_3_votes," \
                 " rating_2, rating_2_votes, rating_1,rating_1_votes)" \
-                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?," \
+                "?,?,?,?,?)".format(table_name)
         conn, cursor = open_db(db_name)
         conn.execute(query,
                      (imdb_id, total_rating, total_rating_votes, rating_10,
@@ -127,12 +177,12 @@ class UserRatings:
         conn.commit()
 
     @classmethod
-    def delete(cls, db_name, imdb_id):
-        q = "SELECT COUNT(imdb_id) FROM User_Ratings WHERE imdb_id=(?)"
+    def delete(cls, db_name, table_name, imdb_id):
+        q = "SELECT COUNT(imdb_id) FROM {} WHERE imdb_id=(?)".format(table_name)
         conn, cursor = open_db(db_name)
         response = conn.execute(q, (imdb_id,))
         if len(response.fetchall()) > 0:
-            q = "DELETE FROM User_Ratings WHERE imdb_id=(?)"
+            q = "DELETE FROM {} WHERE imdb_id=(?)".format(table_name)
             conn.execute(q, (imdb_id,))
             conn.commit()
             return 1
