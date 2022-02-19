@@ -234,7 +234,7 @@ class BigMovers(unittest.TestCase):
                           'movie_user_ratings', 'popular_shows', 'popular_movies',
                           'big_movers_movies']
         counter = 0
-        query = 'SELECT tbl_name FROM main.sqlite_master WHERE media_type==(?)'
+        query = 'SELECT tbl_name FROM main.sqlite_master WHERE type==(?)'
         conn, cursor = model.open_db('tester.sqlite')
         response = conn.execute(query, ('table',))
         response = response.fetchall()
