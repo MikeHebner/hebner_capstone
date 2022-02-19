@@ -1,17 +1,34 @@
+"""This module covers all testing for Project 1"""
 import unittest
 import p1s1_hebner
 import model
 
 
 class Test250(unittest.TestCase):
+    """
+    Class for checking that 250 results are returned from query.
+
+    Methods
+    -------
+    test(): Runs test.
+    """
+
     def test(self):
         self.assertTrue(p1s1_hebner.get_top_tv(), 250)
 
 
 class TestTwo(unittest.TestCase):
-    # Loads mock entry into test database
-    # Queries the database for mock entry
-    # If the length of the response is 1, the entry exists in the database.
+    """
+    Class checks that an entry is successfully stored in database.
+
+    Methods
+    -------
+    test():
+        Loads mock entry into test database.
+        Queries the database for mock entry.
+        If the length of the response is 1, the entry exists in the database.
+    """
+
     def test(self):
         test_show = {
             "items":
@@ -49,6 +66,27 @@ class TestTwo(unittest.TestCase):
 
 
 class BigMovers(unittest.TestCase):
+    """
+    Class for testing that the entries with the largest rank_up_down
+    value are pulled from popular_movies table and recorded in
+    big_movers_movies.
+
+    Methods
+    -------
+    test_movers_happy():
+        Uses properly formatted data.
+        Loads mock entries into popular_movies table.
+        Gets 2 with the largest value in both direction.
+        Ensures the upward movers are positive values and
+        the  downward are negative.
+        Test needs improvement.
+        Should compare each value with each other to ensure
+        proper order as well.
+
+    test_movers_bad():
+        Users improperly formatted data.
+        Other than that, the rest is the same as above function.
+    """
 
     def test_movers_happy(self):
         happy_data = [{
