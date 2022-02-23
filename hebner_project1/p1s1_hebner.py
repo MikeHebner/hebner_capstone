@@ -5,7 +5,6 @@ import requests
 
 import model
 
-
 # add comment to test workflow
 
 
@@ -217,6 +216,32 @@ def load_popular_media(db_name, table_name, data):
                                year, image, crew, imdb_rating, imdb_rating_count)
 
 
+def update_all():
+    model.run_sql_file('schema.sql', 'imdb.sqlite')
+    get_top_tv()
+    load_top_tv()
+#    get_top_movies()
+ #   load_top_movie()
+    movie_data = get_popular_media('movie')
+    tv_data = get_popular_media('tv')
+    load_popular_media('imdb.sqlite', 'popular_movies', movie_data)
+    load_popular_media('imdb.sqlite', 'popular_shows', tv_data)
+    up_movers = model.PopularMedia.get_big_mover('imdb.sqlite', 'popular_movies', '+', '3')
+    down_movers = model.PopularMedia.get_big_mover('imdb.sqlite', 'popular_movies', '', '1')
+    for i in up_movers:
+        imdb_id = i[0]
+        rank = i[1]
+        rank_up_down = i[2]
+        model.PopularMedia.add_big_movers('imdb.sqlite', 'big_movers_movies',
+                                          imdb_id, rank, rank_up_down)
+    for i in down_movers:
+        imdb_id = i[0]
+        rank = i[1]
+        rank_up_down = i[2]
+        model.PopularMedia.add_big_movers('imdb.sqlite', 'big_movers_movies',
+                                          imdb_id, rank, rank_up_down)
+
+
 def main():
     # Drop and Create Tables
     model.run_sql_file('schema.sql', 'imdb.sqlite')
@@ -245,6 +270,7 @@ def main():
         rank_up_down = i[2]
         model.PopularMedia.add_big_movers('imdb.sqlite', 'big_movers_movies',
                                           imdb_id, rank, rank_up_down)
+
 
 
 if __name__ == "__main__":
