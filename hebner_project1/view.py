@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QComboBox, QPushButton
 from hebner_project1 import p1s1_hebner as controller
+from hebner_project1 import model
 
 
 class AppWindow(QDialog):
@@ -33,7 +34,6 @@ class AppWindow(QDialog):
         self.data_window = DataWindow()
 
 
-
 class DataWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -57,9 +57,10 @@ class DataWindow(QWidget):
         self.combo2.addItem("MOST POPULAR")
         self.combo2.move(50, 65)
 
-        self.combo3.addItem("RANK UP DOWN")
+        self.combo3.addItem("RANK_UP_DOWN")
         self.combo3.addItem("RANK")
         self.combo3.move(50, 90)
+
 
         self.combo4.addItem("ASC")
         self.combo4.addItem("DESC")
@@ -76,9 +77,20 @@ class DataWindow(QWidget):
     def get_params(self):
         media_type = self.combo1.currentText()
         category = self.combo2.currentText()
-        trait = self.combo3.currentText()
-        order = self.combo4.currentText()
-        print("You want the {} {} by {} sorted {}".format(category,media_type,trait,order))
+        order_by = self.combo3.currentText()
+        order_by = order_by.lower()
+        sort = self.combo4.currentText()
+        if category == 'TOP 250':
+            if media_type == 'MOVIES':
+                model.TopMovie.get_all('imdb.sqlite')
+            else:
+                model.TopTv.get_all('imdb.sqlite')
+        else:
+            if media_type == 'MOVIES':
+                table_name = 'popular_movies'
+            else:
+                table_name = 'popular_shows'
+            model.PopularMedia.get_all_ordered_by('imdb.sqlite', table_name, order_by, sort)
 
 
 app = QApplication(sys.argv)

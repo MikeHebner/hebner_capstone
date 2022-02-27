@@ -64,6 +64,13 @@ class TopTv:
         response = conn.execute(q, (imdb_id,))
         return response.fetchall()
 
+    @classmethod
+    def get_all(cls, db_name):
+        query = 'SELECT * FROM top_shows'
+        conn, cursor = open_db(db_name)
+        response = conn.execute(query)
+        return response.fetchall()
+
 
 class TopMovie:
 
@@ -111,6 +118,13 @@ class TopMovie:
         q = "SELECT * FROM top_movies WHERE imdb_id=(?)"
         conn, cursor = open_db(db_name)
         response = conn.execute(q, (imdb_id,))
+        return response.fetchall()
+
+    @classmethod
+    def get_all(cls, db_name):
+        query = 'SELECT * FROM top_movies'
+        conn, cursor = open_db(db_name)
+        response = conn.execute(query)
         return response.fetchall()
 
 
@@ -239,3 +253,12 @@ class PopularMedia:
         conn, cursor = open_db(db_name)
         conn.execute(query, (imdb_id, rank, rank_up_down))
         conn.commit()
+
+    @classmethod
+    def get_all_ordered_by(cls, db_name, table_name, order_by, sort):
+        query = 'SELECT * FROM {} ORDER BY {} {}'.format(table_name, order_by, sort)
+        print(query)
+        conn, cursor = open_db(db_name)
+        response = conn.execute(query)
+        return response.fetchall()
+
