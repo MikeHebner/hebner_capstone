@@ -25,7 +25,7 @@ def get_top_tv():
 # Gets the top 250 Movies and saves the json response to the project directory
 # I did this to cut down on the api request
 def get_top_movies():
-    url = 'https://imdb-api.com/en/API/Top250Moviess/{}'.format(secrets.API_KEY, )
+    url = 'https://imdb-api.com/en/API/Top250Movies/{}'.format(secrets.API_KEY, )
     response = requests.get(url)
     data = response.json()
     with open('topMovies.json', 'w') as file:
@@ -220,8 +220,8 @@ def update_all():
     model.run_sql_file('schema.sql', 'imdb.sqlite')
     get_top_tv()
     load_top_tv()
-#    get_top_movies()
- #   load_top_movie()
+    get_top_movies()
+    load_top_movie()
     movie_data = get_popular_media('movie')
     tv_data = get_popular_media('tv')
     load_popular_media('imdb.sqlite', 'popular_movies', movie_data)
