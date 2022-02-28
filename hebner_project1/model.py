@@ -66,7 +66,7 @@ class TopTv:
 
     @classmethod
     def get_all(cls, db_name):
-        query = 'SELECT * FROM top_shows'
+        query = 'SELECT rank, title, year, imdb_rating, imdb_rating_count FROM top_shows'
         conn, cursor = open_db(db_name)
         response = conn.execute(query)
         return response.fetchall()
@@ -122,7 +122,7 @@ class TopMovie:
 
     @classmethod
     def get_all(cls, db_name):
-        query = 'SELECT * FROM top_movies'
+        query = 'SELECT rank, title, year, imdb_rating, imdb_rating_count FROM top_movies'
         conn, cursor = open_db(db_name)
         response = conn.execute(query)
         return response.fetchall()
@@ -256,7 +256,7 @@ class PopularMedia:
 
     @classmethod
     def get_all_ordered_by(cls, db_name, table_name, order_by, sort):
-        query = 'SELECT * FROM {} ORDER BY {} {}'.format(table_name, order_by, sort)
+        query = 'SELECT rank, rank_up_down, title, year, imdb_rating, imdb_rating_count FROM {} ORDER BY {} {}'.format(table_name, order_by, sort)
         print(query)
         conn, cursor = open_db(db_name)
         response = conn.execute(query)

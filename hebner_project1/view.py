@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QComboBox, QPushButton
+from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QComboBox, QPushButton, QTableWidget, QTableWidgetItem
 from hebner_project1 import p1s1_hebner as controller
 from hebner_project1 import model
 
@@ -31,15 +31,15 @@ class AppWindow(QDialog):
         print("UPDATED")
 
     def visualize(self):
-        self.data_window = DataWindow()
+        self.data_window = DataSelectWindow()
 
 
-class DataWindow(QWidget):
+class DataSelectWindow(QWidget):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle('DATA SELECTION')
-        self.setGeometry(300, 100, 400, 300)
+        self.setGeometry(300, 100, 1200, 800)
         self.setup_window()
         self.show()
 
@@ -48,6 +48,12 @@ class DataWindow(QWidget):
         self.combo3 = QComboBox(self)
         self.combo2 = QComboBox(self)
         self.combo1 = QComboBox(self)
+
+        self.table = QTableWidget(self)
+        self.table.move(200, 0)
+        self.table.setMinimumSize(1000, 500)
+        self.table.setColumnCount(6)
+
 
         self.combo1.addItem("MOVIES")
         self.combo1.addItem("TV")
@@ -60,7 +66,6 @@ class DataWindow(QWidget):
         self.combo3.addItem("RANK_UP_DOWN")
         self.combo3.addItem("RANK")
         self.combo3.move(50, 90)
-
 
         self.combo4.addItem("ASC")
         self.combo4.addItem("DESC")
@@ -82,15 +87,40 @@ class DataWindow(QWidget):
         sort = self.combo4.currentText()
         if category == 'TOP 250':
             if media_type == 'MOVIES':
-                model.TopMovie.get_all('imdb.sqlite')
+                data = model.TopMovie.get_all('imdb.sqlite')
+                self.creat_table_top250(data)
+
             else:
-                model.TopTv.get_all('imdb.sqlite')
+                data = model.TopTv.get_all('imdb.sqlite')
+                self.creat_table_top250(data)
+
         else:
             if media_type == 'MOVIES':
                 table_name = 'popular_movies'
             else:
                 table_name = 'popular_shows'
-            model.PopularMedia.get_all_ordered_by('imdb.sqlite', table_name, order_by, sort)
+            data = model.PopularMedia.get_all_ordered_by('imdb.sqlite', table_name, order_by, sort)
+            self.creat_table_popular(data)
+
+    # Should make function to craete table for popular movies/ttv and another for top 250s
+    def creat_table_popular(self, data):
+        self.table.setHorizontalHeaderLabels("RANK;RANK +/-;TITLE;YEAR;RATING;RATING COUNT".split(";"))
+        self.table.setRowCount(len(data))
+        for i in range(len(data)):
+            for j in range(6):
+                self.table.setItem(i, j, QTableWidgetItem(str(data[i][j])))
+        self.table.resizeColumnsToContents()
+        self.table.resizeRowsToContents()
+
+    def creat_table_top250(self, data):
+        self.table.setHorizontalHeaderLabels("RANK;TITLE;YEAR;RATING;RATING COUNT".split(";"))
+        self.table.setRowCount(len(data))
+
+        for i in range(len(data)):
+            for j in range(5):
+                self.table.setItem(i, j, QTableWidgetItem(str(data[i][j])))
+        self.table.resizeColumnsToContents()
+        self.table.resizeRowsToContents()
 
 
 app = QApplication(sys.argv)
