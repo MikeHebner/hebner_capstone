@@ -1,5 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QComboBox, QPushButton, QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QComboBox, QPushButton, QTableWidget, QTableWidgetItem, \
+    QLabel
 from hebner_project1 import p1s1_hebner as controller
 from hebner_project1 import model
 
@@ -38,6 +39,7 @@ class DataSelectWindow(QWidget):
     def __init__(self):
         super().__init__()
 
+        self.rating_window = None
         self.setWindowTitle('DATA SELECTION')
         self.setGeometry(300, 100, 1200, 800)
         self.setup_window()
@@ -53,7 +55,7 @@ class DataSelectWindow(QWidget):
         self.table.move(200, 0)
         self.table.setMinimumSize(1000, 500)
         self.table.setColumnCount(6)
-
+        self.table.cellClicked.connect(self.cell_clicked)
 
         self.combo1.addItem("MOVIES")
         self.combo1.addItem("TV")
@@ -102,25 +104,47 @@ class DataSelectWindow(QWidget):
             data = model.PopularMedia.get_all_ordered_by('imdb.sqlite', table_name, order_by, sort)
             self.creat_table_popular(data)
 
-    # Should make function to craete table for popular movies/ttv and another for top 250s
+    # imdb_id is hidden in last column of both tables
     def creat_table_popular(self, data):
-        self.table.setHorizontalHeaderLabels("RANK;RANK +/-;TITLE;YEAR;RATING;RATING COUNT".split(";"))
+        self.table.setHorizontalHeaderLabels("RANK;RANK +/-;TITLE;YEAR;RATING;RATING COUNT;imdb_id".split(";"))
         self.table.setRowCount(len(data))
         for i in range(len(data)):
-            for j in range(6):
+            for j in range(7):
                 self.table.setItem(i, j, QTableWidgetItem(str(data[i][j])))
+        self.table.setColumnHidden(4, True)
         self.table.resizeColumnsToContents()
         self.table.resizeRowsToContents()
 
     def creat_table_top250(self, data):
-        self.table.setHorizontalHeaderLabels("RANK;TITLE;YEAR;RATING;RATING COUNT".split(";"))
+        self.table.setHorizontalHeaderLabels("RANK;TITLE;YEAR;RATING;RATING COUNT;imdb_id".split(";"))
         self.table.setRowCount(len(data))
 
         for i in range(len(data)):
-            for j in range(5):
+            for j in range(6):
                 self.table.setItem(i, j, QTableWidgetItem(str(data[i][j])))
+        self.table.setColumnHidden(5, True)
         self.table.resizeColumnsToContents()
         self.table.resizeRowsToContents()
+
+    def cell_clicked(self, row, _):
+        self.rating_window = RatingWindow(self.table.item(row, 5).text())
+        self.rating_window.show()
+        print(self.table.item(row,5).text())
+        return self.table.item(row, 5).text()
+
+
+class RatingWindow(QWidget):
+    def __init__(self, imdb_id):
+        super().__init__()
+        self.imdb_id = imdb_id
+        self.setWindowTitle('USER RATING')
+        self.setGeometry(300, 100, 800, 800)
+        self.setup_window()
+
+
+    def setup_window(self):
+        return
+
 
 
 app = QApplication(sys.argv)
