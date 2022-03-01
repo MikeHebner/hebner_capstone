@@ -5,6 +5,7 @@ import requests
 
 import model
 
+
 # add comment to test workflow
 
 
@@ -160,30 +161,17 @@ def load_top_movie():
 # Takes the imdbID as input.
 # Loads the User rating for given input into database.
 # media_type = movie or tv
-def load_user_ratings(imdb_id, media_type):
+def load_user_ratings(imdb_id):
     imdb_id, total_rating, total_rating_votes, rating_percents, rating_votes \
         = get_user_rating_data_v2(imdb_id)
-    if media_type == 'movie':
-        model.UserRatings.add('imdb.sqlite', imdb_id, 'movie_user_ratings', total_rating,
-                              total_rating_votes, rating_percents[0], rating_votes[0],
-                              rating_percents[1], rating_votes[1], rating_percents[2],
-                              rating_votes[2], rating_percents[3], rating_votes[3],
-                              rating_percents[4], rating_votes[4], rating_percents[5],
-                              rating_votes[5], rating_percents[6], rating_votes[6],
-                              rating_percents[7], rating_votes[7], rating_percents[8],
-                              rating_votes[8], rating_percents[9], rating_votes[9])
-
-    elif media_type == 'tv':
-        model.UserRatings.add('imdb.sqlite', imdb_id, 'tv_user_ratings', total_rating,
-                              total_rating_votes, rating_percents[0], rating_votes[0],
-                              rating_percents[1], rating_votes[1], rating_percents[2],
-                              rating_votes[2], rating_percents[3], rating_votes[3],
-                              rating_percents[4], rating_votes[4], rating_percents[5],
-                              rating_votes[5], rating_percents[6], rating_votes[6],
-                              rating_percents[7], rating_votes[7], rating_percents[8],
-                              rating_votes[8], rating_percents[9], rating_votes[9])
-    else:
-        return "INVALID INPUT"
+    model.UserRatings.add('imdb.sqlite', imdb_id, 'user_ratings', total_rating,
+                          total_rating_votes, rating_percents[0], rating_votes[0],
+                          rating_percents[1], rating_votes[1], rating_percents[2],
+                          rating_votes[2], rating_percents[3], rating_votes[3],
+                          rating_percents[4], rating_votes[4], rating_percents[5],
+                          rating_votes[5], rating_percents[6], rating_votes[6],
+                          rating_percents[7], rating_votes[7], rating_percents[8],
+                          rating_votes[8], rating_percents[9], rating_votes[9])
 
 
 # input = tv or movie
@@ -251,7 +239,7 @@ def main():
     load_top_tv()
     for i in raw_input:
         imdb_id = get_id(i)
-        load_user_ratings(imdb_id, 'tv')
+        load_user_ratings(imdb_id)
     movie_data = get_popular_media('movie')
     tv_data = get_popular_media('tv')
     load_popular_media('imdb.sqlite', 'popular_movies', movie_data)
@@ -270,7 +258,6 @@ def main():
         rank_up_down = i[2]
         model.PopularMedia.add_big_movers('imdb.sqlite', 'big_movers_movies',
                                           imdb_id, rank, rank_up_down)
-
 
 
 if __name__ == "__main__":

@@ -129,7 +129,8 @@ class DataSelectWindow(QWidget):
     def cell_clicked(self, row, _):
         self.rating_window = RatingWindow(self.table.item(row, 5).text())
         self.rating_window.show()
-        print(self.table.item(row,5).text())
+        imdb_id = self.table.item(row,5).text()
+        print(imdb_id)
         return self.table.item(row, 5).text()
 
 
@@ -143,6 +144,7 @@ class RatingWindow(QWidget):
 
 
     def setup_window(self):
+        controller.load_user_ratings(self.imdb_id)
         return
 
 

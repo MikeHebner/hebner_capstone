@@ -26,8 +26,8 @@ CREATE TABLE top_movies
   PRIMARY KEY (imdb_id)
 );
 
-DROP TABLE IF EXISTS tv_user_ratings;
-CREATE TABLE tv_user_ratings
+DROP TABLE IF EXISTS user_ratings;
+CREATE TABLE user_ratings
 (
   imdb_id VARCHAR NOT NULL,
   total_rating INT NOT NULL,
@@ -51,37 +51,7 @@ CREATE TABLE tv_user_ratings
   rating_2 INT NOT NULL,
   rating_2_votes INT NOT NULL,
   rating_1 INT NOT NULL,
-  rating_1_votes INT NOT NULL,
-  FOREIGN KEY (imdb_id) REFERENCES top_shows(imdb_id)
-);
-
-DROP TABLE IF EXISTS movie_user_ratings;
-CREATE TABLE movie_user_ratings
-(
-  imdb_id VARCHAR NOT NULL,
-  total_rating INT NOT NULL,
-  total_rating_votes INT NOT NULL,
-  rating_10 INT NOT NULL,
-  rating_10_votes INT NOT NULL,
-  rating_9 INT NOT NULL,
-  rating_9_votes INT NOT NULL,
-  rating_8 INT NOT NULL,
-  rating_8_votes INT NOT NULL,
-  rating_7 INT NOT NULL,
-  rating_7_votes INT NOT NULL,
-  rating_6 INT NOT NULL,
-  rating_6_votes INT NOT NULL,
-  rating_5 INT NOT NULL,
-  rating_5_votes INT NOT NULL,
-  rating_4 INT NOT NULL,
-  rating_4_votes INT NOT NULL,
-  rating_3 INT NOT NULL,
-  rating_3_votes INT NOT NULL,
-  rating_2 INT NOT NULL,
-  rating_2_votes INT NOT NULL,
-  rating_1 INT NOT NULL,
-  rating_1_votes INT NOT NULL,
-  FOREIGN KEY (imdb_id) REFERENCES popular_movies(imdb_id)
+  rating_1_votes INT NOT NULL
 );
 
 DROP TABLE IF EXISTS popular_shows;

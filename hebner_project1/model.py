@@ -202,6 +202,14 @@ class UserRatings:
             return 0
 
 
+    @classmethod
+    def get_by_id(cls, db_name, table_name, imbd_id):
+        query = "SELECT * FROM {} WHERE imdb_id=(?)".format(table_name)
+        conn, cursor = open_db(db_name)
+        response = conn.execute(query, (imbd_id,))
+        print(response.fetchall())
+
+
 # One class to cover  both TV shows and Movies
 class PopularMedia:
 
