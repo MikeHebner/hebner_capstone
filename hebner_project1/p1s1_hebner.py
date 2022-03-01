@@ -164,7 +164,7 @@ def load_top_movie():
 def load_user_ratings(imdb_id):
     imdb_id, total_rating, total_rating_votes, rating_percents, rating_votes \
         = get_user_rating_data_v2(imdb_id)
-    model.UserRatings.add('imdb.sqlite', imdb_id, 'user_ratings', total_rating,
+    model.UserRatings.add('imdb.sqlite', imdb_id, total_rating,
                           total_rating_votes, rating_percents[0], rating_votes[0],
                           rating_percents[1], rating_votes[1], rating_percents[2],
                           rating_votes[2], rating_percents[3], rating_votes[3],

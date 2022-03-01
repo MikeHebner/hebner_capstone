@@ -51,7 +51,8 @@ CREATE TABLE user_ratings
   rating_2 INT NOT NULL,
   rating_2_votes INT NOT NULL,
   rating_1 INT NOT NULL,
-  rating_1_votes INT NOT NULL
+  rating_1_votes INT NOT NULL,
+  PRIMARY KEY (imdb_id)
 );
 
 DROP TABLE IF EXISTS popular_shows;

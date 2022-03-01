@@ -66,7 +66,7 @@ class TopTv:
 
     @classmethod
     def get_all(cls, db_name):
-        query = 'SELECT rank, title, year, imdb_rating, imdb_rating_count, imdb_id FROM top_shows'
+        query = 'SELECT  title, year,rank, imdb_rating, imdb_rating_count, imdb_id FROM top_shows'
         conn, cursor = open_db(db_name)
         response = conn.execute(query)
         return response.fetchall()
@@ -122,7 +122,7 @@ class TopMovie:
 
     @classmethod
     def get_all(cls, db_name):
-        query = 'SELECT rank, title, year, imdb_rating, imdb_rating_count, imdb_id FROM top_movies'
+        query = 'SELECT  title, year,rank, imdb_rating, imdb_rating_count, imdb_id FROM top_movies'
         conn, cursor = open_db(db_name)
         response = conn.execute(query)
         return response.fetchall()
@@ -161,14 +161,14 @@ class UserRatings:
         self.rating_1_votes = rating_1_votes
 
     @classmethod
-    def add(cls, db_name, imdb_id, table_name, total_rating, total_rating_votes,
+    def add(cls, db_name, imdb_id, total_rating, total_rating_votes,
             rating_10, rating_10_votes, rating_9, rating_9_votes,
             rating_8, rating_8_votes, rating_7, rating_7_votes,
             rating_6, rating_6_votes, rating_5, rating_5_votes,
             rating_4, rating_4_votes, rating_3, rating_3_votes,
             rating_2, rating_2_votes, rating_1,
             rating_1_votes):
-        query = "INSERT INTO {}(imdb_id, total_rating," \
+        query = "INSERT or REPLACE INTO user_ratings(imdb_id, total_rating," \
                 " total_rating_votes, rating_10, rating_10_votes," \
                 "rating_9, rating_9_votes,rating_8, rating_8_votes," \
                 " rating_7, rating_7_votes, rating_6," \
@@ -176,7 +176,7 @@ class UserRatings:
                 " rating_4_votes, rating_3, rating_3_votes," \
                 " rating_2, rating_2_votes, rating_1,rating_1_votes)" \
                 " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?," \
-                "?,?,?,?,?)".format(table_name)
+                "?,?,?,?,?)"
         conn, cursor = open_db(db_name)
         conn.execute(query,
                      (imdb_id, total_rating, total_rating_votes, rating_10,
@@ -189,25 +189,53 @@ class UserRatings:
         conn.commit()
 
     @classmethod
-    def delete(cls, db_name, table_name, imdb_id):
-        q = "SELECT COUNT(imdb_id) FROM {} WHERE imdb_id=(?)".format(table_name)
+    def delete(cls, db_name, imdb_id):
+        q = "SELECT COUNT(imdb_id) FROM user_ratings WHERE imdb_id=(?)"
         conn, cursor = open_db(db_name)
         response = conn.execute(q, (imdb_id,))
         if len(response.fetchall()) > 0:
-            q = "DELETE FROM {} WHERE imdb_id=(?)".format(table_name)
+            q = "DELETE FROM user_ratings WHERE imdb_id=(?)"
             conn.execute(q, (imdb_id,))
             conn.commit()
             return 1
         else:
             return 0
 
-
     @classmethod
-    def get_by_id(cls, db_name, table_name, imbd_id):
-        query = "SELECT * FROM {} WHERE imdb_id=(?)".format(table_name)
+    def get_by_id(cls, db_name, imdb_id):
+        ratings = {}
+        query = "SELECT total_rating_votes," \
+                "rating_10, rating_10_votes,rating_9, rating_9_votes,rating_8, rating_8_votes," \
+                "rating_7, rating_7_votes,rating_6, rating_6_votes,rating_5, rating_5_votes," \
+                "rating_4, rating_4_votes,rating_3, rating_3_votes,rating_2, rating_2_votes," \
+                "rating_1, rating_1_votes  FROM user_ratings WHERE imdb_id=?"
         conn, cursor = open_db(db_name)
-        response = conn.execute(query, (imbd_id,))
-        print(response.fetchall())
+        response = conn.execute(query, (imdb_id,)).fetchall()[0]
+
+        ratings['total_rating_votes'] = response[0]
+        ratings['rating_10'] = response[1]
+        ratings['rating_10_votes'] = response[2]
+        ratings['rating_9'] = response[3]
+        ratings['rating_9_votes'] = response[4]
+        ratings['rating_8'] = response[5]
+        ratings['rating_8_votes'] = response[6]
+        ratings['rating_7'] = response[7]
+        ratings['rating_7_votes'] = response[8]
+        ratings['rating_6'] = response[9]
+        ratings['rating_6_votes'] = response[10]
+        ratings['rating_5'] = response[11]
+        ratings['rating_5_votes'] = response[12]
+        ratings['rating_4'] = response[13]
+        ratings['rating_4_votes'] = response[14]
+        ratings['rating_3'] = response[15]
+        ratings['rating_3_votes'] = response[16]
+        ratings['rating_2'] = response[17]
+        ratings['rating_2_votes'] = response[18]
+        ratings['rating_1'] = response[19]
+        ratings['rating_1_votes'] = response[20]
+        return ratings
+
+
 
 
 # One class to cover  both TV shows and Movies
@@ -264,9 +292,9 @@ class PopularMedia:
 
     @classmethod
     def get_all_ordered_by(cls, db_name, table_name, order_by, sort):
-        query = 'SELECT rank, rank_up_down, title, year, imdb_rating, imdb_rating_count, imdb_id FROM {} ORDER BY {} {}'.format(table_name, order_by, sort)
+        query = 'SELECT title, year, rank, rank_up_down, imdb_rating, imdb_rating_count, imdb_id FROM {} ORDER BY {} {}'.format(
+            table_name, order_by, sort)
         print(query)
         conn, cursor = open_db(db_name)
         response = conn.execute(query)
         return response.fetchall()
-

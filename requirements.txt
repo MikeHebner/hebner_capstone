@@ -1,2 +1,4 @@
 requests==2.27.1
 PyQt5==5.15.6
+pyqtgraph==0.12.3
+numpy==1.22.2

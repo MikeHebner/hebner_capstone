@@ -1,4 +1,7 @@
 import sys
+
+import numpy as np
+import pyqtgraph as pg
 from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QComboBox, QPushButton, QTableWidget, QTableWidgetItem, \
     QLabel
 from hebner_project1 import p1s1_hebner as controller
@@ -106,7 +109,7 @@ class DataSelectWindow(QWidget):
 
     # imdb_id is hidden in last column of both tables
     def creat_table_popular(self, data):
-        self.table.setHorizontalHeaderLabels("RANK;RANK +/-;TITLE;YEAR;RATING;RATING COUNT;imdb_id".split(";"))
+        self.table.setHorizontalHeaderLabels("TITLE;YEAR;RANK;RANK +/-;RATING;RATING COUNT;imdb_id".split(";"))
         self.table.setRowCount(len(data))
         for i in range(len(data)):
             for j in range(7):
@@ -116,7 +119,7 @@ class DataSelectWindow(QWidget):
         self.table.resizeRowsToContents()
 
     def creat_table_top250(self, data):
-        self.table.setHorizontalHeaderLabels("RANK;TITLE;YEAR;RATING;RATING COUNT;imdb_id".split(";"))
+        self.table.setHorizontalHeaderLabels("TITLE;YEAR;RANK;RATING;RATING COUNT;imdb_id".split(";"))
         self.table.setRowCount(len(data))
 
         for i in range(len(data)):
@@ -127,26 +130,39 @@ class DataSelectWindow(QWidget):
         self.table.resizeRowsToContents()
 
     def cell_clicked(self, row, _):
-        self.rating_window = RatingWindow(self.table.item(row, 5).text())
+        self.rating_window = RatingWindow(self.table.item(row, 5).text(), self.table.item(row, 0).text())
         self.rating_window.show()
-        imdb_id = self.table.item(row,5).text()
-        print(imdb_id)
-        return self.table.item(row, 5).text()
+        return self.table.item(row, 5).text()  # returns imdb_id of clicked cell
 
 
 class RatingWindow(QWidget):
-    def __init__(self, imdb_id):
+    def __init__(self, imdb_id, title):
         super().__init__()
+        self.graph = None
         self.imdb_id = imdb_id
+        self.title = title
+        self.plot = None
         self.setWindowTitle('USER RATING')
         self.setGeometry(300, 100, 800, 800)
         self.setup_window()
 
-
     def setup_window(self):
         controller.load_user_ratings(self.imdb_id)
-        return
+        user_ratings = model.UserRatings.get_by_id('imdb.sqlite', self.imdb_id)
+        y_axis = [user_ratings['rating_1_votes'], user_ratings['rating_2_votes'],
+                  user_ratings['rating_3_votes'], user_ratings['rating_4_votes'],
+                  user_ratings['rating_5_votes'], user_ratings['rating_6_votes'],
+                  user_ratings['rating_7_votes'], user_ratings['rating_8_votes'],
+                  user_ratings['rating_9_votes'], user_ratings['rating_10_votes']]
 
+        title = "USER RATINGS FOR {}".format(self.title)
+        print(title)
+        self.plot = pg.plot(title=title)
+
+        y = user_ratings['total_rating_votes']
+        self.graph = pg.BarGraphItem(x=range(1, 11), height=y_axis, width=0.5)
+
+        self.plot.addItem(self.graph)
 
 
 app = QApplication(sys.argv)
