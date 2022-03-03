@@ -236,8 +236,6 @@ class UserRatings:
         return ratings
 
 
-
-
 # One class to cover  both TV shows and Movies
 class PopularMedia:
 
@@ -298,3 +296,15 @@ class PopularMedia:
         conn, cursor = open_db(db_name)
         response = conn.execute(query)
         return response.fetchall()
+
+    @classmethod
+    def count_movers_by_dir(cls, db_name, table_name, direction):
+        if direction == "+":
+            query = "SELECT COUNT(rank_up_down) FROM %s WHERE rank_up_down > 0" % str(table_name)
+        elif direction == "-":
+            query = "SELECT COUNT(rank_up_down) FROM %s WHERE rank_up_down < 0" % str(table_name)
+        else:
+            return "INVALID INPUT"
+        conn, cursor = open_db(db_name)
+        response = conn.execute(query)
+        return response.fetchall()[0][0]

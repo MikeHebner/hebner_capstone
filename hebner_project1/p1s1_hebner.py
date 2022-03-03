@@ -1,6 +1,6 @@
 # Michael Hebner
 import json
-import secrets
+from hebner_project1 import secrets
 import requests
 
 import model
@@ -12,7 +12,9 @@ import model
 # Gets the top 250 TV shows and saves the json response to the project directory
 # I did this to cut down on the api request
 def get_top_tv():
+    print(secrets.API_KEY)
     url = 'https://imdb-api.com/en/API/Top250TVs/{}'.format(secrets.API_KEY, )
+
     response = requests.get(url)
     data = response.json()
     with open('topTv.json', 'w') as file:
