@@ -58,7 +58,7 @@ CREATE TABLE user_ratings
 DROP TABLE IF EXISTS popular_shows;
 CREATE TABLE popular_shows
 (
-    imdb_id VARCHAR NOT NULL,
+    imdb_id INT NOT NULL,
     rank INT NOT NULL,
     rank_up_down INT NOT NULL,
     title INT NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE popular_shows
 DROP TABLE IF EXISTS popular_movies;
 CREATE TABLE popular_movies
 (
-    imdb_id VARCHAR NOT NULL,
+    imdb_id INT NOT NULL,
     rank INT NOT NULL,
     rank_up_down INT NOT NULL,
     title VARCHAR NOT NULL,

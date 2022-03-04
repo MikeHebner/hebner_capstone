@@ -1,22 +1,22 @@
 import sys
-
-import numpy
-import pyqtgraph as pg
-import matplotlib.pyplot as plt
-# from PyQt5.QtChart import QPieSeries
-from PyQt5 import QtWidgets
+from matplotlib import pyplot as plt
 from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QComboBox, QPushButton, QTableWidget, QTableWidgetItem, \
-    QLabel, QMainWindow
+    QLabel
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as Canvas
-from matplotlib.figure import Figure
 
 from hebner_project1 import p1s1_hebner as controller
 from hebner_project1 import model
 
 
+def update_db():
+    controller.update_all()
+    print("UPDATED")
+
+
 class AppWindow(QDialog):
     def __init__(self):
         super().__init__()
+        self.pie = None
         self.setWindowTitle('IMDB DATABASE')
         self.setGeometry(300, 100, 400, 300)
         self.data_window = None
@@ -25,30 +25,39 @@ class AppWindow(QDialog):
 
     def setup_window(self):
         exit_button = QPushButton("EXIT", self)
-        exit_button.move(50, 150)
+        exit_button.move(50, 200)
         exit_button.pressed.connect(QApplication.instance().quit)
 
         update_button = QPushButton("UPDATE DATABASE", self)
         update_button.move(50, 50)
-        update_button.clicked.connect(self.update_db)
+        update_button.clicked.connect(update_db)
 
-        data_button = QPushButton("VISUALIZE", self)
+        data_button = QPushButton("TABLES", self)
         data_button.move(50, 100)
         data_button.clicked.connect(self.visualize)
 
-    def update_db(self):
-        controller.update_all()
-        print("UPDATED")
+        compare_button = QPushButton("PIES", self)
+        compare_button.move(50, 150)
+        compare_button.pressed.connect(self.open_pie)
+
+        compare_button_label = QLabel('Click here to compare up/down movers\n'
+                                      'from Popular Movies and Show', self)
+        compare_button_label.move(25, 710)
 
     def visualize(self):
         self.data_window = DataSelectWindow()
+
+    def open_pie(self):
+        self.pie = PieGraphWindow()
+        self.pie.show()
 
 
 class DataSelectWindow(QWidget):
     def __init__(self):
         super().__init__()
+        self.table = QTableWidget(self)
+        self.last_col = None
         self.rating_window = None
-        self.pie_window = None
         self.setWindowTitle('DATA SELECTION')
         self.setGeometry(300, 100, 1200, 800)
         self.setup_window()
@@ -60,7 +69,6 @@ class DataSelectWindow(QWidget):
         self.combo2 = QComboBox(self)
         self.combo1 = QComboBox(self)
 
-        self.table = QTableWidget(self)
         self.table.move(200, 0)
         self.table.setMinimumSize(1000, 500)
         self.table.setColumnCount(6)
@@ -88,18 +96,14 @@ class DataSelectWindow(QWidget):
 
         exit_button = QPushButton("EXIT", self)
         exit_button.move(25, 140)
-        exit_button.pressed.connect(QApplication.instance().quit)
+        exit_button.pressed.connect(self.close_it)
 
-        compare_button = QPushButton("GO", self)
-        compare_button.move(25,750)
-        compare_button.pressed.connect(self.open_pie)
+        info_label = QLabel('Click on any table entry to see\n'
+                            'distribution of user ratings.', self)
+        info_label.move(200, 525)
 
-        compare_button_label = QLabel('Click here to compare up/down movers from Popular Movies and Show',self)
-        compare_button_label.move(25,730)
-
-    def open_pie(self):
-        pie = PieGraphWindow()
-        pie.show()
+    def close_it(self):
+        self.close()
 
     def get_params(self):
         media_type = self.combo1.currentText()
@@ -116,40 +120,55 @@ class DataSelectWindow(QWidget):
                 data = model.TopTv.get_all('imdb.sqlite')
                 self.creat_table_top250(data)
 
-        else:
+        elif category == 'MOST POPULAR':
             if media_type == 'MOVIES':
                 table_name = 'popular_movies'
+                data = model.PopularMedia.get_all_ordered_by('imdb.sqlite', table_name, order_by, sort)
+                self.creat_table_popular(data)
             else:
                 table_name = 'popular_shows'
-            data = model.PopularMedia.get_all_ordered_by('imdb.sqlite', table_name, order_by, sort)
-            self.creat_table_popular(data)
+                data = model.PopularMedia.get_all_ordered_by('imdb.sqlite', table_name, order_by, sort)
+                self.creat_table_popular(data)
+        else:
+            print("ERROR: wrong parameter")
+            return "ERROR: wrong parameter"
 
     # imdb_id is hidden in last column of both tables
     def creat_table_popular(self, data):
         self.table.setHorizontalHeaderLabels("TITLE;YEAR;RANK;RANK +/-;RATING;RATING COUNT;imdb_id".split(";"))
         self.table.setRowCount(len(data))
+        self.last_col = 6
         for i in range(len(data)):
             for j in range(7):
                 self.table.setItem(i, j, QTableWidgetItem(str(data[i][j])))
-        self.table.setColumnHidden(4, True)
+        # self.table.setColumnHidden(6, True)
         self.table.resizeColumnsToContents()
         self.table.resizeRowsToContents()
 
     def creat_table_top250(self, data):
         self.table.setHorizontalHeaderLabels("TITLE;YEAR;RANK;RATING;RATING COUNT;imdb_id".split(";"))
         self.table.setRowCount(len(data))
-
+        self.last_col = 5
         for i in range(len(data)):
             for j in range(6):
                 self.table.setItem(i, j, QTableWidgetItem(str(data[i][j])))
-        self.table.setColumnHidden(5, True)
+        # self.table.setColumnHidden(5, True)
         self.table.resizeColumnsToContents()
         self.table.resizeRowsToContents()
 
     def cell_clicked(self, row, _):
-        # self.rating_window = RatingWindow(self.table.item(row, 5).text(), self.table.item(row, 0).text())
-        self.rating_window = GraphWindow(self.table.item(row, 5).text(), self.table.item(row, 0).text())
-        self.rating_window.show()
+        if self.last_col == 5:
+            print(self.last_col)
+
+            # self.rating_window = RatingWindow(self.table.item(row, 5).text(), self.table.item(row, 0).text())
+            self.rating_window = GraphWindow(self.table.item(row, 5).text(), self.table.item(row, 0).text())
+            self.rating_window.show()
+        if self.last_col == 6:
+            print(self.last_col)
+            # self.rating_window = RatingWindow(self.table.item(row, 5).text(), self.table.item(row, 0).text())
+            self.rating_window = GraphWindow(self.table.item(row, 6).text(), self.table.item(row, 0).text())
+            self.rating_window.show()
+
         return self.table.item(row, 5).text()  # returns imdb_id of clicked cell
 
 
@@ -181,7 +200,7 @@ class GraphWindow(QWidget):
         self.title = title
 
         self.resize(800, 800)
-        chart = UserReviewCanvas(self, self.imdb_id, self.title)
+        self.chart = UserReviewCanvas(self, self.imdb_id, self.title)
 
 
 class PieGraph(Canvas):
@@ -192,29 +211,25 @@ class PieGraph(Canvas):
         self.movie_data.append(model.PopularMedia.count_movers_by_dir('imdb.sqlite', 'popular_movies', '-'))
         self.show_data.append(model.PopularMedia.count_movers_by_dir('imdb.sqlite', 'popular_shows', '+'))
         self.show_data.append(model.PopularMedia.count_movers_by_dir('imdb.sqlite', 'popular_shows', '-'))
-
         self.labels = ['UP', 'DOWN']
-
         self.figure, (self.ax1, self.ax2) = plt.subplots(1, 2, figsize=(10, 10))
-
         super().__init__(self.figure)
         self.setParent(parent)
         self.ax1.pie(self.movie_data, labels=self.labels, autopct='%1.1f%%')
         self.ax1.axis('equal')
         self.ax1.set_title('Popular Movies')
         self.ax1.grid()
-
         self.ax2.pie(self.show_data, labels=self.labels, autopct='%1.1f%%')
         self.ax2.axis('equal')
         self.ax2.set_title('Popular Shows')
         self.ax2.grid()
 
+
 class PieGraphWindow(QWidget):
     def __init__(self):
         super().__init__()
-
         self.resize(1000, 800)
-        graph = PieGraph(self)
+        self.graph = PieGraph(self)
 
 
 app = QApplication(sys.argv)

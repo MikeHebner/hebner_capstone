@@ -290,11 +290,12 @@ class PopularMedia:
 
     @classmethod
     def get_all_ordered_by(cls, db_name, table_name, order_by, sort):
-        query = 'SELECT title, year, rank, rank_up_down, imdb_rating, imdb_rating_count, imdb_id FROM {} ORDER BY {} {}'.format(
-            table_name, order_by, sort)
-        print(query)
+        query = 'SELECT title, year, rank, rank_up_down, imdb_rating, imdb_rating_count, imdb_id ' \
+                'FROM {} ORDER BY {} {}'.format(table_name, order_by, sort)
+
         conn, cursor = open_db(db_name)
         response = conn.execute(query)
+
         return response.fetchall()
 
     @classmethod
