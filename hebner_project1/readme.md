@@ -5,7 +5,7 @@
 <img src="capstone_walkthrough/main_menu.png">
 </div>
 <div>
-<img src="capstone_walkthrough/table_view.png">
+![alt text](/capstone_walkthrough/main_menu.png)
 </div>
 <div>
 <img src="capstone_walkthrough/user_rating_graph.png">
