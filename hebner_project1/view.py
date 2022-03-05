@@ -1,6 +1,7 @@
 import sys
 from matplotlib import pyplot as plt
-from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QComboBox, QPushButton, QTableWidget, QTableWidgetItem, \
+from PyQt5.QtWidgets import QDialog, QApplication, QWidget,\
+    QComboBox, QPushButton, QTableWidget, QTableWidgetItem, \
     QLabel
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as Canvas
 
@@ -123,11 +124,13 @@ class DataSelectWindow(QWidget):
         elif category == 'MOST POPULAR':
             if media_type == 'MOVIES':
                 table_name = 'popular_movies'
-                data = model.PopularMedia.get_all_ordered_by('imdb.sqlite', table_name, order_by, sort)
+                data = model.PopularMedia.get_all_ordered_by('imdb.sqlite', table_name,
+                                                             order_by, sort)
                 self.creat_table_popular(data)
             else:
                 table_name = 'popular_shows'
-                data = model.PopularMedia.get_all_ordered_by('imdb.sqlite', table_name, order_by, sort)
+                data = model.PopularMedia.get_all_ordered_by('imdb.sqlite',
+                                                             table_name, order_by, sort)
                 self.creat_table_popular(data)
         else:
             print("ERROR: wrong parameter")
@@ -135,40 +138,49 @@ class DataSelectWindow(QWidget):
 
     # imdb_id is hidden in last column of both tables
     def creat_table_popular(self, data):
-        self.table.setHorizontalHeaderLabels("TITLE;YEAR;RANK;RANK +/-;RATING;RATING COUNT;imdb_id".split(";"))
+        self.table.setColumnCount(7)
+        self.table.setHorizontalHeaderLabels("TITLE;"
+                                             "YEAR;"
+                                             "RANK;"
+                                             "RANK +/-;"
+                                             "RATING;"
+                                             "RATING COUNT;"
+                                             "imdb_id".split(";"))
         self.table.setRowCount(len(data))
         self.last_col = 6
         for i in range(len(data)):
             for j in range(7):
                 self.table.setItem(i, j, QTableWidgetItem(str(data[i][j])))
-        # self.table.setColumnHidden(6, True)
+        self.table.setColumnHidden(6, True)
         self.table.resizeColumnsToContents()
         self.table.resizeRowsToContents()
 
     def creat_table_top250(self, data):
-        self.table.setHorizontalHeaderLabels("TITLE;YEAR;RANK;RATING;RATING COUNT;imdb_id".split(";"))
+        self.table.setColumnCount(6)
+        self.table.setHorizontalHeaderLabels("TITLE;"
+                                             "YEAR;"
+                                             "RANK;"
+                                             "RATING;"
+                                             "RATING COUNT;"
+                                             "imdb_id".split(";"))
         self.table.setRowCount(len(data))
         self.last_col = 5
         for i in range(len(data)):
             for j in range(6):
                 self.table.setItem(i, j, QTableWidgetItem(str(data[i][j])))
-        # self.table.setColumnHidden(5, True)
+        self.table.setColumnHidden(5, True)
         self.table.resizeColumnsToContents()
         self.table.resizeRowsToContents()
 
     def cell_clicked(self, row, _):
         if self.last_col == 5:
-            print(self.last_col)
-
-            # self.rating_window = RatingWindow(self.table.item(row, 5).text(), self.table.item(row, 0).text())
-            self.rating_window = GraphWindow(self.table.item(row, 5).text(), self.table.item(row, 0).text())
+            self.rating_window = GraphWindow(self.table.item(row, 5).text(),
+                                             self.table.item(row, 0).text())
             self.rating_window.show()
         if self.last_col == 6:
-            print(self.last_col)
-            # self.rating_window = RatingWindow(self.table.item(row, 5).text(), self.table.item(row, 0).text())
-            self.rating_window = GraphWindow(self.table.item(row, 6).text(), self.table.item(row, 0).text())
+            self.rating_window = GraphWindow(self.table.item(row, 6).text(),
+                                             self.table.item(row, 0).text())
             self.rating_window.show()
-
         return self.table.item(row, 5).text()  # returns imdb_id of clicked cell
 
 
@@ -198,7 +210,6 @@ class GraphWindow(QWidget):
         super().__init__()
         self.imdb_id = imdb_id
         self.title = title
-
         self.resize(800, 800)
         self.chart = UserReviewCanvas(self, self.imdb_id, self.title)
 
@@ -207,10 +218,18 @@ class PieGraph(Canvas):
     def __init__(self, parent):
         self.movie_data = []
         self.show_data = []
-        self.movie_data.append(model.PopularMedia.count_movers_by_dir('imdb.sqlite', 'popular_movies', '+'))
-        self.movie_data.append(model.PopularMedia.count_movers_by_dir('imdb.sqlite', 'popular_movies', '-'))
-        self.show_data.append(model.PopularMedia.count_movers_by_dir('imdb.sqlite', 'popular_shows', '+'))
-        self.show_data.append(model.PopularMedia.count_movers_by_dir('imdb.sqlite', 'popular_shows', '-'))
+        self.movie_data.append(
+            model.PopularMedia.count_movers_by_dir('imdb.sqlite', 'popular_movies', '+')
+        )
+        self.movie_data.append(
+            model.PopularMedia.count_movers_by_dir('imdb.sqlite', 'popular_movies', '-')
+        )
+        self.show_data.append(
+            model.PopularMedia.count_movers_by_dir('imdb.sqlite', 'popular_shows', '+')
+        )
+        self.show_data.append(
+            model.PopularMedia.count_movers_by_dir('imdb.sqlite', 'popular_shows', '-')
+        )
         self.labels = ['UP', 'DOWN']
         self.figure, (self.ax1, self.ax2) = plt.subplots(1, 2, figsize=(10, 10))
         super().__init__(self.figure)
