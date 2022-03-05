@@ -1,7 +1,6 @@
 """This module covers all testing for Project 1"""
 import unittest
-import p1s1_hebner
-import model
+from hebner_project1 import model, p1s1_hebner
 
 
 class Test250(unittest.TestCase):
